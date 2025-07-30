@@ -3,14 +3,14 @@ clear
 ***set pathnames
 
 if c(username)=="albertoornaghi"{
-	global MAIN "/Users/albertoornaghi/Desktop/LSE Files/Year 4/GV398/Dissertation"
+	global RFEMAIN "/Users/albertoornaghi/Documents/GitHub/coding_samples/RFE"
 	
-	global CODE "$MAIN/Do Files"
+	global RFECODE "$MAIN/Code"
 	
-	global DATA "$MAIN/Datasets"
+	global RFEDATA "$MAIN/Datasets"
 	
-	global FIG "$MAIN/Graphs"
-	global TAB "$MAIN/Tables"
+	global RFEFIG "$MAIN/Graphs"
+	global RFETAB "$MAIN/Tables"
 	
 }
 
