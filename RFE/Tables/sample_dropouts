@@ -1,0 +1,20 @@
+post_policy_1 control missing = 3
+post_policy_1 group1 missing = 1
+post_policy_1 group2 missing = 2
+post_policy_1 group3 missing = .
+post_activism_radical_4 control missing = 4
+post_activism_radical_4 group1 missing = 1
+post_activism_radical_4 group2 missing = 3
+post_activism_radical_4 group3 missing = .
+pre_policy == pre_policy_miss missing policy p-value = .8786221344618534
+pre_activism == pre_activism_miss missing policy p-value = .3394788619427451
+pre_anxiety == pre_anxiety_miss missing policy p-value = .4198312489545241
+pre_norms == pre_norms_miss missing policy p-value = .6483080007959114
+pre_justice == pre_justice_miss missing policy p-value = .7925125457137696
+pre_behaviours == pre_behaviours_miss missing policy p-value = .1959628184269158
+pre_policy == pre_policy_miss missing activism p-value.5425658238168267
+pre_activism == pre_activism_miss missing activism p-value.431916775666639
+pre_anxiety == pre_anxiety_miss missing activism p-value.6035503673335093
+pre_norms == pre_norms_miss missing activism p-value.8307262532604065
+pre_justice == pre_justice_miss missing activism p-value.9814525453588372
+pre_behaviours == pre_behaviours_miss missing activism p-value.2766861916458762

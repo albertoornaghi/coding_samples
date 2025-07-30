@@ -2,25 +2,15 @@ clear
 
 ***set pathnames
 
-if c(username)=="albertoornaghi"{
-	global RFEMAIN "/Users/albertoornaghi/Documents/GitHub/coding_samples/RFE"
-	
-	global RFECODE "$MAIN/Code"
-	
-	global RFEDATA "$MAIN/Datasets"
-	
-	global RFEFIG "$MAIN/Graphs"
-	global RFETAB "$MAIN/Tables"
-	
-}
-
+local project "RFE"
+include "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper/pathnames.do"
 ***set locals for running code
 
 local clean_data		1
 
 *** import dataset from qualtrics
 
-import excel "$DATA/RFE_data_raw.xlsx", clear firstrow
+import excel "$RFEDATA/RFE_data_raw.xlsx", clear firstrow
 
 if `clean_data'==1{
 
@@ -356,8 +346,17 @@ if `clean_data'==1{
 
 	labvars radical_aware_full moderate_aware_full radical_aware_exclffl ///
 	"Aware of Radical Groups" "Aware of Moderate Groups" "Aware of Radical Groups excl. FFL"
+	
+	***generate means for perception by radical/moderate group classification
+
+	egen radical_percep= rmean(jso_radical ffl_radical ib_radical er_radical) 
+	egen moderate_percep = rmean(tcc_radical gndr_radical fote_radical greenpeace_radical)
+
+
+	labvars radical_percep moderate_percep  ///
+	"Percieve Radical as Radical" "Percieve Moderate as Radical" 
 }
 
 
-save "RFE_data_clean.dta", replace
+save "$RFEDATA/RFE_data_clean.dta", replace
 

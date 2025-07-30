@@ -1,0 +1,5 @@
+	Factor1	
+post_activism_moderate_1	 .65341278	
+post_activism_moderate_2	 .57310354	
+post_activism_moderate_3	 .58789094	
+post_activism_moderate_4	 .53944625	

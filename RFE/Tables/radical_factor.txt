@@ -1,0 +1,5 @@
+	Factor1	Factor2	
+post_activism_radical_1	 .89236787	-.12068391	
+post_activism_radical_2	 .85261263	-.17193688	
+post_activism_radical_3	 .82359204	 .14232228	
+post_activism_radical_4	 .79837357	 .17169218	
