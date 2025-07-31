@@ -1,5 +1,10 @@
 clear
 
+***set file path globals
+
+local project MN
+include "$HELPER/pathnames.do"
+
 ***set locals to govern running code sections
 
 local import				0
@@ -8,27 +13,22 @@ local word_count			0
 local final_dataset			0
 local demo_dyad_vars		0
 
-***set file path globals
-
-global DATA /Users/albertoornaghi/Desktop/LSE Files/Year 4/GV343/Methods Note
-global FIGURES /Users/albertoornaghi/Desktop/LSE Files/Year 4/GV343/Methods Note/Visualisations New
-
 if `import'==1{
 
 	*** Import and save all questionnaire length files in Stata format
 
 	foreach file in AB_Questionnaire.Length_R7to9_21oct24.csv AB_Questionnaire.Length_R10_21oct24.csv{
-		import delimited "$DATA/`file'"
-		save "$DATA/`file'"
+		import delimited "$MNDATA/`file'"
+		save "$MNDATA/`file'"
 	}
 
-	local filelist "$DATA/ANGOLA.xlsx" "$DATA/BENIN.xlsx" "$DATA/BFO.xlsx" "$DATA/BOTSWANA.xlsx" "$DATA/CAMEROON.xlsx" ///
-	"$DATA/CBZ.xlsx" "$DATA/CDI.xlsx" "$DATA/CVE.xlsx" "$DATA/ESWATINI.xlsx" "$DATA/ETH.xlsx" "$DATA/GABON.xlsx" /// 
-	"$DATA/GAMBIA.xlsx" "$DATA/GHA.xlsx" "$DATA/GUI.xlsx" "$DATA/KEN.xlsx" "$DATA/LES.xlsx" "$DATA/LIB.xlsx" /// 
-	"$DATA/MAD.xlsx" "$DATA/MALI.xlsx" "$DATA/MAU.xlsx" "$DATA/MLW.xlsx" "$DATA/MOR.xlsx" "$DATA/MOZ.xlsx" ///
-	"$DATA/MRT.xlsx" "$DATA/NAM.xlsx" "$DATA/NGR.xlsx" "$DATA/NIG.xlsx" "$DATA/SAF.xlsx" "$DATA/SEN.xlsx" ///
-	"$DATA/SEY.xlsx" "$DATA/SRL.xlsx" "$DATA/STP.xlsx" "$DATA/SUD.xlsx" "$DATA/TAN.xlsx" "$DATA/TOG.xlsx" ///
-	"$DATA/TUN.xlsx" "$DATA/USA.xlsx" "$DATA/ZAM.xlsx" "$DATA/ZIM.xlsx"
+	local filelist "$MNDATA/ANGOLA.xlsx" "$MNDATA/BENIN.xlsx" "$MNDATA/BFO.xlsx" "$MNDATA/BOTSWANA.xlsx" "$MNDATA/CAMEROON.xlsx" ///
+	"$MNDATA/CBZ.xlsx" "$MNDATA/CDI.xlsx" "$MNDATA/CVE.xlsx" "$MNDATA/ESWATINI.xlsx" "$MNDATA/ETH.xlsx" "$MNDATA/GABON.xlsx" /// 
+	"$MNDATA/GAMBIA.xlsx" "$MNDATA/GHA.xlsx" "$MNDATA/GUI.xlsx" "$MNDATA/KEN.xlsx" "$MNDATA/LES.xlsx" "$MNDATA/LIB.xlsx" /// 
+	"$MNDATA/MAD.xlsx" "$MNDATA/MALI.xlsx" "$MNDATA/MAU.xlsx" "$MNDATA/MLW.xlsx" "$MNDATA/MOR.xlsx" "$MNDATA/MOZ.xlsx" ///
+	"$MNDATA/MRT.xlsx" "$MNDATA/NAM.xlsx" "$MNDATA/NGR.xlsx" "$MNDATA/NIG.xlsx" "$MNDATA/SAF.xlsx" "$MNDATA/SEN.xlsx" ///
+	"$MNDATA/SEY.xlsx" "$MNDATA/SRL.xlsx" "$MNDATA/STP.xlsx" "$MNDATA/SUD.xlsx" "$MNDATA/TAN.xlsx" "$MNDATA/TOG.xlsx" ///
+	"$MNDATA/TUN.xlsx" "$MNDATA/USA.xlsx" "$MNDATA/ZAM.xlsx" "$MNDATA/ZIM.xlsx"
 
 	*** Import and save all translation files in Stata format
 	
@@ -74,9 +74,9 @@ if `merge'==1 {
 	
 		if "`file'"=="AB_round_10"{
 		
-			use "$DATA/`file'",clear
+			use "$MNDATA/`file'",clear
 			
-			merge m:1 countrycode using "$DATA/AB_questionnaire_length_r10.dta"
+			merge m:1 countrycode using "$MNDATA/AB_questionnaire_length_r10.dta"
 			
 			
 			tempfile `file'_merged
@@ -86,9 +86,9 @@ if `merge'==1 {
 		
 		if "`file'"!="AB_round_10"{
 		
-			use "$DATA/`file'",clear
+			use "$MNDATA/`file'",clear
 			
-			merge m:1 countrycode round using "$DATA/AB_questionnaire_length_r7to9.dta.dta"
+			merge m:1 countrycode round using "$MNDATA/AB_questionnaire_length_r7to9.dta.dta"
 			drop if _merge==2
 			drop _merge
 			
@@ -101,7 +101,7 @@ if `merge'==1 {
 
 if `word_count'==1{
 
-***below we prepare the wordcount datasets for one country (Angola), this method is then repeated for all other countries - this process cannot be automated as the languages offered differ in each country
+***below we prepare the wordcount datasets for one country (Angola), this method is then repeated for all other countries - this process cannot be automated as the languages offered differ in each country and the files are not standardised
 
 use "ANGOLA.dta" 
 
@@ -189,20 +189,20 @@ replace wordcount = r(sum) in 1
 
 *** using these new files with the wordcounts we put them together into one wqordcount file for all ocuntries and languages
 
-use "H:\ANGOLA.dta"
+use "MNDATA\ANGOLA.dta"
 
 *** Create identifiers for round and country which match those in the main dataset
 
 gen round = 9
 gen countrycode = "ANG"
 drop if wordcount == .
-save "H:\ANGOLA_count.dta"
+save "MNDATA\ANGOLA_count.dta"
 
 *** Repeat above steps for all the translation files for the different countries
 
 *** Append to angola file the files for other countries and drop all variables except wordcounts 
 
-append using "H:\BENIN_count.dta"
+append using "MNDATA\BENIN_count.dta"
 keep wordcount language country round
 
 *** repeat with all files until a full dataset including all countries,languages and their wordcounts is created
@@ -272,7 +272,7 @@ if `final_dataset'==1{
 	tab _merge
 	drop if _merge == 2
 	
-	save "$DATA/AB_dataset_final"
+	save "$MNDATA/AB_dataset_final"
 
 	***clean and generate main dependent variables
 	
@@ -290,7 +290,7 @@ if `final_dataset'==1{
 
 if `demo_dyad_vars'==1{
 
-	use "$DATA/AB_dataset_final", clear
+	use "$MNDATA/AB_dataset_final", clear
 
 	*** generate dummy variables coding round numbers
 
@@ -593,7 +593,7 @@ gen mean_yn_weighted = (yn_weight_1* DUR1_10_R9+yn_weight_2* DUR11_19_R9+yn_weig
 gen mean_oe_weighted = (oe_weight_1* DUR1_10_R9+oe_weight_2* DUR11_19_R9+oe_weight_3* DUR20_29_R9+oe_weight_4* DUR30_39_R9+oe_weight_5* DUR40_49_R9+oe_weight_6* DUR50_59_R9+oe_weight_7* DUR60_69_R9+oe_weight_8* DUR70_79_R9+oe_weight_9* DUR80_89_R9+oe_weight_10* DUR90_99_R9)/(oe_weight_1+ oe_weight_2+ oe_weight_3+ oe_weight_4+ oe_weight_5+ oe_weight_6+ oe_weight_7+ oe_weight_8+ oe_weight_9+ oe_weight_10)
 summ mean_demo_weighted mean_mc_weighted mean_scale_weighted mean_twos_weighted mean_yn_weighted mean_oe_weighted
 
-save "H:\AB_dataset_final.dta", replace
+save "MNDATA\AB_dataset_final.dta", replace
 
 
 }

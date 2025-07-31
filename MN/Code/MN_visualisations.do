@@ -1,26 +1,28 @@
 clear
 
-***set locals to govern running code sections
-
-local word_count		0
-local duration_round	0
-local cleveland			0
-local difference		0	
-local questions			0
-local language			0
-local dyads				0
-local endtime			0
-local sections			0
-
 
 ***set file path globals
 
-global DATA /Users/albertoornaghi/Desktop/LSE Files/Year 4/GV343/Methods Note
-global FIGURES /Users/albertoornaghi/Desktop/LSE Files/Year 4/GV343/Methods Note/Visualisations New
+local project MN
+include "$HELPER/pathnames.do"
+
+
+***set locals to govern running code sections
+
+local word_count		1
+local duration_round	1
+local cleveland			1
+local difference		1	
+local questions			1
+local language			1
+local dyads				1
+local endtime			1
+local sections			1
+
 
 ***bring in dataset
 
-use "$DATA/AB_dataset_final",clear
+use "$MNDATA/AB_dataset_final",clear
 
 tempfile data
 save `data'
@@ -57,14 +59,14 @@ if `word_count'==1{
 	graph hbar LENGTH, over(language_sample, sort(1) descending label(ang(h) labsize(*0.3))) yline(45) ylabel(,nogrid) ///
 	ytitle("Interview Duration (Mins)") name("length",replace) inten(*0.85) linten(*0.85)
 
-	graph export "$FIGURES/bar_language.jpg", as(jpg) quality(100)replace
+	graph export "$MNFIG/bar_language.jpg", as(jpg) quality(100)replace
 
 	*** graph duration per word over languages
 
 	graph hbar duration_per_word_seconds, over(language_sample, sort(1) descending label(ang(h) labsize(*0.3))) yline(0.333) ///
 	ylabel(,nogrid)  ytitle("Interview Duration per Word (Secs)") nofill name("word",replace) inten(*0.85) linten(*0.85)
 
-	graph export "$FIGURES/bar_language_word.jpg", as(jpg) quality(100) replace
+	graph export "$MNFIG/bar_language_word.jpg", as(jpg) quality(100) replace
 
 
 	
@@ -107,7 +109,7 @@ if `duration_round'==1{
 					   xlabel(,nogrid valuelabel) yline(45) note(All available countries used) name(`x',replace)
 			}
 
-			graph export "$FIGURES/bar_round_duration_`x'.jpg", as(jpg) name("`x'") quality(100) replace
+			graph export "$MNFIG/bar_round_duration_`x'.jpg", as(jpg) name("`x'") quality(100) replace
 
 		restore
 
@@ -119,7 +121,7 @@ if `duration_round'==1{
 
 graph hbox LENGTH, over(round_counter) ylabel(0 45 100 200 300 400) ytitle("Interview Duration (Mins)") yline(45) ylabel(,nogrid)
 
-graph export "$FIGURES/box_round_duration.jpg", as(jpg) name("Graph") quality(100) replace
+graph export "$MNFIG/box_round_duration.jpg", as(jpg) name("Graph") quality(100) replace
 
 
 }
@@ -173,7 +175,7 @@ if `cleveland'==1{
 		leg(order(1 "Round 7 (16/18)" 2 "Round 8 (19/21)" 3 "Round 9 (21/23)" 4 "Round 10 (24)") position(6) rows(1)) dotextend(no) dc(%20) dfc(%20))
 		
 
-		graph export "$FIGURES/cleveland_country_round.jpg", as(jpg) name("Graph") quality(100) replace
+		graph export "$MNFIG/cleveland_country_round.jpg", as(jpg) name("Graph") quality(100) replace
 
 	restore 
 	
@@ -337,7 +339,7 @@ if `difference'==1{
 		ytitle("Difference between Round 7 and Round 9 Question Duration (Secs)") sort(diff) yline(0) blab(bar, size(vsmall) format(%7.1f) pos(out)) name("`x'", replace)
 		}
 		
-		graph export "$FIGURES/bar_country_difference_`var'.jpg", as(jpg) name("Graph") quality(100) replace
+		graph export "$MNFIG/bar_country_difference_`var'.jpg", as(jpg) name("Graph") quality(100) replace
 
 	restore
 
@@ -367,14 +369,14 @@ if `questions'==1{
 		legend(off) xlabel(,nogrid) ylabel(,nogrid) ytitle(Mean Interview Duration (Mins)) ///
 		note("Round 9 data only. Pearson Correlation Coefficient: 0.2566, P-value: 0.1148", size(vsmall) pos(8) ring(0))
 		
-		graph export "$FIGURES/scatter_duration_total.pdf", as(pdf) name("Graph") replace
+		graph export "$MNFIG/scatter_duration_total.pdf", as(pdf) name("Graph") replace
 
 		twoway scatter duration_per_q_seconds total_q, mlabel(country_count) mlabsize(tiny) mlabpos(6) ///
 		|| lfit duration_per_q_seconds total_q, legend(off) xlabel(,nogrid) ylabel(,nogrid) ///
 		ytitle(Mean Interview Duration Per Question (Secs)) note("Round 9 data only. Pearson Correlation Coefficient: 0.0918, P-value: 0.5782" ///
 		, size(vsmall) pos(8) ring(0))
 
-		graph export "$FIGURES/scatter_duration_question_total.pdf", as(pdf) name("Graph") replace
+		graph export "$MNFIG/scatter_duration_question_total.pdf", as(pdf) name("Graph") replace
 
 	restore
 
@@ -421,7 +423,7 @@ if `language'==1{
 				xlabel(,nogrid valuelabel) note(Round 9 data only)
 			}
 
-			graph export "$FIGURES/bar_languages_`x'.jpg", as(jpg) quality(100) name("Graph") replace
+			graph export "$MNFIG/bar_languages_`x'.jpg", as(jpg) quality(100) name("Graph") replace
 
 		restore
 
@@ -454,7 +456,7 @@ if `language'==1{
 		(scatter fluency_mean fluency_match, connect(l) mlabel(fluency_mean) mlabposition(3) mlabformat(%7.1f)) ///
 		, ylabel(,nogrid) ytitle("Interview Duration (Mins)") xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only)
 
-		graph export "$FIGURES/scatter_fluency.jpg", as(jpg) quality(100) name("Graph") replace
+		graph export "$MNFIG/scatter_fluency.jpg", as(jpg) quality(100) name("Graph") replace
 
 	restore
 
@@ -491,7 +493,7 @@ if `dyads'==1{
 		, ylabel(,nogrid) ytitle("Interview Duration (Mins)") xlabel(0 "No" 1 "Yes", val nogrid) xtitle("") note(Round 9 data only)
 
 
-		graph export "$FIGURES/scatter_genderdyad.jpg", as(jpg) quality(100) name("Graph") replace
+		graph export "$MNFIG/scatter_genderdyad.jpg", as(jpg) quality(100) name("Graph") replace
 
 	restore
 
@@ -532,7 +534,7 @@ if `dyads'==1{
 		(scatter yo_mean young_old, connect(l) mlabel(yo_mean) mlabposition(12) mlabformat(%7.1f)) ///
 		, ylabel(,nogrid) ytitle("Interview Duration (Mins)") xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only)
 
-		graph export "$FIGURES/scatter_age.jpg", as(jpg) quality(100) name("Graph") replace
+		graph export "$MNFIG/scatter_age.jpg", as(jpg) quality(100) name("Graph") replace
 
 	restore
 
@@ -558,7 +560,7 @@ if `endtime'==1{
 		twoway (scatter LENGTH ENDTIME_HRS_DUM, connect(l) mlabel(LENGTH) mlabposition(3) mlabformat(%7.1f)) ///
 		, ylabel(,nogrid) ytitle("Interview Duration (Mins)") xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only) legend(on)
 
-		graph export "$FIGURES/scatter_endtime.jpg", as(jpg) quality(100) name("Graph") replace
+		graph export "$MNFIG/scatter_endtime.jpg", as(jpg) quality(100) name("Graph") replace
 
 	restore
 
@@ -599,12 +601,12 @@ if `sections'==1{
 	,  ylabel(0 2 4 6 8 10 12,nogrid)  ytitle("Section Duration (Mins)") xlabel(, nogrid labsize(vsmall)) ///
 	color(%85 %85 %85 %85) note(	Round 9data only) mlabel(mean) mlabf(%7.1f) mlabc(green*0.7)
 
-	graph export "$FIGURES/bar_section_duration.jpg", as(jpg) quality(100) name("Graph") replace
+	graph export "$MNFIG/bar_section_duration.jpg", as(jpg) quality(100) name("Graph") replace
 
 	catcibar s1_dur_perq_secs-s10_dur_perq_secs ///
 	,  ylabel(0 5 10 15 20 25 30,nogrid)  ytitle("Section Duration per Question (Secs)") ///
 	xlabel(, nogrid labsize(vsmall)) color(%85 %85 %85 %85) note(Round 9 data only) mlabel(mean) mlabf(%7.1f) mlabc(green*0.7)
 
-	graph export "$FIGURES/bar_section_duration_question.jpg", as(jpg) quality(100) name("Graph") replace
+	graph export "$MNFIG/bar_section_duration_question.jpg", as(jpg) quality(100) name("Graph") replace
 
 }
