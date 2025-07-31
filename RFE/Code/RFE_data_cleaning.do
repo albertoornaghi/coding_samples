@@ -4,6 +4,7 @@ clear
 
 local project "RFE"
 include "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper/pathnames.do"
+
 ***set locals for running code
 
 local clean_data		1

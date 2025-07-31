@@ -1,0 +1,348 @@
+\documentclass{article}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{ulem}
+\usepackage[table]{xcolor}
+\begin{document}
+\begin{table}[!h]
+\centering
+\begin{tabular}{lllllllll}
+\cline{1-9}
+\multicolumn{1}{r}{} &
+  \multicolumn{2}{c}{post\_policy\_mean} &
+  \multicolumn{2}{c}{post\_policy\_mean} &
+  \multicolumn{2}{c}{post\_policy\_factor} &
+  \multicolumn{2}{c}{post\_policy\_factor} \\
+\cline{1-9}
+\multicolumn{1}{l}{Treatment Group 1} &
+  \multicolumn{1}{r}{0.143} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.229} &
+  \multicolumn{1}{l}{*} &
+  \multicolumn{1}{r}{0.249} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.371} &
+  \multicolumn{1}{l}{**} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.207)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.134)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.275)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.180)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Treatment Group 2} &
+  \multicolumn{1}{r}{0.304} &
+  \multicolumn{1}{l}{*} &
+  \multicolumn{1}{r}{0.105} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.426} &
+  \multicolumn{1}{l}{*} &
+  \multicolumn{1}{r}{0.194} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.173)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.136)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.228)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.176)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Treatment Group 3} &
+  \multicolumn{1}{r}{0.365} &
+  \multicolumn{1}{l}{**} &
+  \multicolumn{1}{r}{0.181} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.518} &
+  \multicolumn{1}{l}{**} &
+  \multicolumn{1}{r}{0.270} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.183)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.127)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.242)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.169)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Gender} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.002} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.025} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.099)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.132)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Age} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.002} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.005} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.005)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.008)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{UK Resident} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.195} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.265} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.142)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.190)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Years of education} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.003} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.006} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.018)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.023)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Personal income} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.009} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.010} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.019)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.025)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{UK political party} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.004} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.012} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.017)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.023)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Pre-treatment policy support} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.459} &
+  \multicolumn{1}{l}{***} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.603} &
+  \multicolumn{1}{l}{***} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.099)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.134)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Pre-treatment activism support} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.027} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.001} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.072)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.095)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Pre-treatment eco-anxiety} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.106} &
+  \multicolumn{1}{l}{**} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.142} &
+  \multicolumn{1}{l}{**} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.049)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.066)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Pre-treatment environmental norms} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.016} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.014} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.045)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.058)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Pre-treatment environmental justice beliefs} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.213} &
+  \multicolumn{1}{l}{***} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.322} &
+  \multicolumn{1}{l}{***} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.077)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.103)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Pre-treatment sustainable behaviours} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.058} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.066} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.088)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.117)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Correctly answered attention question} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.028} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.068} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.087)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.117)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Intercept} &
+  \multicolumn{1}{r}{2.598} &
+  \multicolumn{1}{l}{***} &
+  \multicolumn{1}{r}{0.184} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-0.297} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{-3.465} &
+  \multicolumn{1}{l}{***} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.140)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.533)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.186)} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{(0.702)} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{R-squared} &
+  \multicolumn{1}{r}{0.04} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.62} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.05} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{0.63} &
+  \multicolumn{1}{l}{} \\
+\multicolumn{1}{l}{Number of observations} &
+  \multicolumn{1}{r}{110} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{108} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{110} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{108} &
+  \multicolumn{1}{l}{} \\
+\cline{1-9}
+\end{tabular}
+
+\footnotesize{
+*** p$<$.01, ** p$<$.05, * p$<$.1
+}
+\end{table}
+\end{document}
