@@ -2,7 +2,7 @@
 if "`table'"=="sample"{
 
 	collect style cell, border( all, width(0.5) pattern(single))
-	collect label levels result total "Sample Size" mean "Sample Proportion (%)", modify
+	collect label levels result total "Sample Size" mean "Sample Proportion", modify
 	collect style cell, halign(left) valign(center)
 
 
@@ -11,7 +11,7 @@ if "`table'"=="sample"{
 if "`table'"=="total_prop"{
 
 	collect style cell, border( all, width(0.5) pattern(single))
-	collect label levels result total "Total" mean "Proportion (%)", modify
+	collect label levels result total "Total" mean "Proportion", modify
 	collect style cell, halign(left) valign(center)
 
 
@@ -26,12 +26,21 @@ if "`table'"=="mean_sd"{
 	
 }
 
-if "`table'"=="proportion_sd"{
+if "`table'"=="prop_sd"{
 
 	collect style cell, border( all, width(0.5) pattern(single))
 	collect label levels result mean "Proportion" sd "Standard Deviation", modify
 	collect style cell, halign(left) valign(center)
 	collect style cell, nformat(%7.2f)
+	
+}
+
+if "`table'"=="tot_prop_sd"{
+
+	collect style cell, border( all, width(0.5) pattern(single))
+	collect label levels result total "Total" mean "Proportion" sd "Standard Deviation", modify
+	collect style cell, halign(left) valign(center)
+	collect style cell, nformat(%7.2g)
 	
 }
 
