@@ -57,15 +57,19 @@ if `word_count'==1{
 
 	*** duration per word by language bar graph
 
-	graph hbar LENGTH, over(language_sample_above, sort(1) descending label(ang(h) labsize(*0.55))) yline(45) ylabel(,nogrid) ///
-	ytitle("Interview duration (mins)") name("length",replace) inten(*0.85) linten(*0.85)
+	graph hbar LENGTH, over(language_sample_above, sort(1) descending ///
+	label(ang(h) labsize(*0.55))) yline(45) ylabel(,nogrid) ///
+	ytitle("Interview duration (mins)") name("length",replace) ///
+	inten(*0.85) linten(*0.85)
 
 	graph export "$MNFIG/bar_language_above200.jpg", as(jpg) quality(100)replace
 
 	*** graph duration per word over languages
 
-	graph hbar duration_per_word_seconds, over(language_sample_above, sort(1) descending label(ang(h) labsize(*0.55))) yline(0.333) ///
-	ylabel(,nogrid)  ytitle("Interview duration per word (secs)") nofill name("word",replace) inten(*0.85) linten(*0.85)
+	graph hbar duration_per_word_seconds, over(language_sample_above, sort(1) ///
+	descending label(ang(h) labsize(*0.55))) yline(0.333) ///
+	ylabel(,nogrid)  ytitle("Interview duration per word (secs)") ///
+	nofill name("word",replace) inten(*0.85) linten(*0.85)
 
 	graph export "$MNFIG/bar_language_word_above200.jpg", as(jpg) quality(100) replace
 	
@@ -78,15 +82,19 @@ if `word_count'==1{
 
 	*** duration per word by language bar graph
 
-	graph hbar LENGTH, over(language_sample_below, sort(1) descending label(ang(h) labsize(*0.45))) yline(45) ylabel(,nogrid) ///
-	ytitle("Interview duration (mins)") name("length",replace) inten(*0.85) linten(*0.85)
+	graph hbar LENGTH, over(language_sample_below, sort(1) descending ///
+	label(ang(h) labsize(*0.45))) yline(45) ylabel(,nogrid) ///
+	ytitle("Interview duration (mins)") name("length",replace) ///
+	inten(*0.85) linten(*0.85)
 
 	graph export "$MNFIG/bar_language_below200.jpg", as(jpg) quality(100)replace
 
 	*** graph duration per word over languages
 
-	graph hbar duration_per_word_seconds, over(language_sample_below, sort(1) descending label(ang(h) labsize(*0.45))) yline(0.333) ///
-	ylabel(,nogrid)  ytitle("Interview duration per word (secs)") nofill name("word",replace) inten(*0.85) linten(*0.85)
+	graph hbar duration_per_word_seconds, over(language_sample_below, ///
+	sort(1) descending label(ang(h) labsize(*0.45))) yline(0.333) ///
+	ylabel(,nogrid)  ytitle("Interview duration per word (secs)") nofill ///
+	name("word",replace) inten(*0.85) linten(*0.85)
 
 	graph export "$MNFIG/bar_language_word_below200.jpg", as(jpg) quality(100) replace
 
@@ -97,12 +105,13 @@ if `word_count'==1{
 
 if `duration_round'==1{
 
-***label round counter variable for graph axis labels
+	***label round counter variable for graph axis labels
 
-	label define round_1 0 "Round 7 (2016/2018)" 1 "Round 8 (2019/2021)" 2 "Round 9 (2021/2023)" 3 "Round 10 (2024)"
+	label define round_1 0 "Round 7 (2016/2018)" 1 "Round 8 (2019/2021)" 2 ///
+	"Round 9 (2021/2023)" 3 "Round 10 (2024)"
 	label define round_2 0 "2016/2018" 1 "2019/2021" 2 "2021/2023" 3 "2024"
 
-***graph mean duration by survey round with CIs
+	***graph mean duration by survey round with CIs
 
 	local durations LENGTH duration_per_q_seconds
 	
@@ -118,16 +127,21 @@ if `duration_round'==1{
 			if "`x'"=="LENGTH"{
 				twoway (bar mean_duration round_counter, barwidth(0.5) color(%85 %85 %85 %85)) ///
 					   (rcap lower upper round_counter) ///
-					   (scatter mean_duration round_counter, msymbol(none) mlabel(mean_duration) mlabposition(12) mlabformat(%7.1f)) ///
-					   ,legend(off) ytitle("Interview duration (mins)") xtitle("Survey rounds") ylabel(0 20 40 60 80 100,nogrid) ///
+					   (scatter mean_duration round_counter, msymbol(none) ///
+					   mlabel(mean_duration) mlabposition(12) mlabformat(%7.1f)) ///
+					   ,legend(off) ytitle("Interview duration (mins)") xtitle("Survey rounds") ///
+					   ylabel(0 20 40 60 80 100,nogrid) ///
 					   xlabel(,nogrid valuelabel) yline(45) note(All available countries used) name(`x',replace)
 			}
 
 			if "`x'"=="duration_per_q_seconds"{
-				twoway (bar mean_duration round_counter, barwidth(0.5) color(%85 %85 %85 %85) color(stgreen stgreen stgreen stgreen)) ///
+				twoway (bar mean_duration round_counter, barwidth(0.5) ///
+				color(%85 %85 %85 %85) color(stgreen stgreen stgreen stgreen)) ///
 					   (rcap lower upper round_counter) ///
-					   (scatter mean_duration round_counter, msymbol(none) mlabel(mean_duration) mlabposition(12) mlabformat(%7.1f) mlabcolor(stblue)) ///
-					   ,legend(off) ytitle("Average question duration (secs)") xtitle("Survey rounds") ylabel(0 5 10 15 20,nogrid) ///
+					   (scatter mean_duration round_counter, msymbol(none) ///
+					   mlabel(mean_duration) mlabposition(12) mlabformat(%7.1f) mlabcolor(stblue)) ///
+					   ,legend(off) ytitle("Average question duration (secs)") ///
+					   xtitle("Survey rounds") ylabel(0 5 10 15 20,nogrid) ///
 					   xlabel(,nogrid valuelabel) note(All available countries used) name(`x',replace)
 			}
 
@@ -139,11 +153,13 @@ if `duration_round'==1{
 
 	}
 
-***boxplot of duration across rounds with outliers and min/max value labels
 
-graph hbox LENGTH, over(round_counter) ylabel(0 45 100 200 300 400) ytitle("Interview duration (mins)") yline(45) ylabel(,nogrid)
+	***boxplot of duration across rounds with outliers and min/max value labels
 
-graph export "$MNFIG/box_round_duration.jpg", as(jpg) name("Graph") quality(100) replace
+	graph hbox LENGTH, over(round_counter) ylabel(0 45 100 200 300 400) ///
+	ytitle("Interview duration (mins)") yline(45) ylabel(,nogrid)
+
+	graph export "$MNFIG/box_round_duration.jpg", as(jpg) name("Graph") quality(100) replace
 
 
 }
@@ -189,12 +205,15 @@ if `cleveland'==1{
 
 		label values order order
 		
-		twoway (dot LENGTH order if round_counter == 0, sort msym(o) vert xlab(#39, labels valuelabel nogrid labsize(vsmall) ///
+		twoway (dot LENGTH order if round_counter == 0, sort msym(o) vert ///
+		xlab(#39, labels valuelabel nogrid labsize(vsmall) ///
 		angle(vert)) dc(%20) dfc(%20) ytitle("") xlabel(,nogrid) ylabel(,nogrid) dotextend(no)) ///
 		(dot LENGTH order if round_counter == 1, msym(t) vert dotextend(no) dc(%20) dfc(%20)) ///
-		(dot LENGTH order if round_counter == 2, msym(s) vert ytitle("Mean interview duration (mins)") xtitle("") dotextend(no) dc(%20) dfc(%20)) ///
+		(dot LENGTH order if round_counter == 2, msym(s) vert ///
+		ytitle("Mean interview duration (mins)") xtitle("") dotextend(no) dc(%20) dfc(%20)) ///
 		(dot LENGTH order if round_counter == 3, msym(d) vert ///
-		leg(order(1 "2016/2018" 2 "2019/2021" 3 "2021/2023" 4 "2024") position(6) rows(1)) dotextend(no) dc(%20) dfc(%20))
+		leg(order(1 "2016/2018" 2 "2019/2021" 3 "2021/2023" 4 "2024") ///
+		position(6) rows(1)) dotextend(no) dc(%20) dfc(%20))
 		
 
 		graph export "$MNFIG/cleveland_country_round.jpg", as(jpg) name("Graph") quality(100) replace
@@ -342,8 +361,9 @@ if `difference'==1{
 		label define countries_l 0 "Burkina Faso" 1 "Benin" 2 "Botswana" 3 "Cameroon" 4 "Côte d'Ivoire" ///
 		5 "Cabo Verde" 6 "Eswatini"  7 "Gabon" 8 "Gambia" 9 "Ghana" 10 "Guinea" 11 "Kenya" 12 "Lesotho" ///
 		13 "Liberia" 14 "Madagascar" 15 "Mauritius" 16 "Mali" 17 "Malawi" 18 "Morocco" 19 "Mozambique" ///
-		20 "Namibia" 21 "Niger" 22 "Nigeria" 23 "South Africa" 24 "Senegal" 25 "Sierra Leone" 26 "São Tomé and Príncipe" ///
-		27 "Sudan" 28 "Tanzania" 29 "Togo" 30 "Tunisia" 31 "Uganda" 32 "Zambia" 33 "Zimbabwe" 34 "Angola" ///
+		20 "Namibia" 21 "Niger" 22 "Nigeria" 23 "South Africa" 24 "Senegal" 25 "Sierra Leone" ///
+		26 "São Tomé and Príncipe" 27 "Sudan" 28 "Tanzania" 29 "Togo" ///
+		30 "Tunisia" 31 "Uganda" 32 "Zambia" 33 "Zimbabwe" 34 "Angola" ///
 		35 "Ethiopia" 36 "Congo-Brazzaville" 37 "Mauritania" 38 "Seychelles"
 
 		label values country_count countries_l
@@ -393,16 +413,20 @@ if `questions'==1{
 		pwcorr LENGTH duration_per_q_seconds total_q, sig star(0.1)
 
 
-		twoway scatter LENGTH total_q,  mcolor(black) mlabel(country_count) mlabsize(vsmall) mlabpos(12) mlabcolor(black) ///
+		twoway scatter LENGTH total_q,  mcolor(black) mlabel(country_count) ///
+		mlabsize(vsmall) mlabpos(12) mlabcolor(black) ///
 		|| lfit LENGTH total_q, ///
 		legend(off) xlabel(,nogrid) ylabel(,nogrid) ytitle(Mean interview duration (mins)) ///
-		note("Round 9 data only. Pearson correlation coefficient: 0.2566, P-value: 0.1148", size(small) pos(8) ring(0))
+		note("Round 9 data only. Pearson correlation coefficient: 0.2566, P-value: 0.1148", ///
+		size(small) pos(8) ring(0))
 		
 		graph export "$MNFIG/scatter_duration_total.jpg", as(jpg) quality(100) name("Graph") replace
 
-		twoway scatter duration_per_q_seconds total_q, mcolor(black) mlabel(country_count) mlabsize(vsmall) mlabpos(12) mlabcolor(black) ///
+		twoway scatter duration_per_q_seconds total_q, mcolor(black) ///
+		mlabel(country_count) mlabsize(vsmall) mlabpos(12) mlabcolor(black) ///
 		|| lfit duration_per_q_seconds total_q, legend(off) xlabel(,nogrid) ylabel(,nogrid) ///
-		ytitle(Mean interview duration per question (secs)) note("Round 9 data only. Pearson correlation coefficient: 0.0918, P-value: 0.5782" ///
+		ytitle(Mean interview duration per question (secs)) ///
+		note("Round 9 data only. Pearson correlation coefficient: 0.0918, P-value: 0.5782" ///
 		, size(small) pos(8) ring(0))
 
 		graph export "$MNFIG/scatter_duration_question_total.jpg", as(jpg) quality(100) name("Graph") replace
@@ -453,26 +477,34 @@ if `language'==1{
 
 
 			if "`x'"=="LENGTH"{
-				twoway (bar mean_`x' language_order, barwidth(0.5) color(%85 %85 %85 %85) color(stgreen stgreen stgreen stgreen)) ///
+				twoway (bar mean_`x' language_order, barwidth(0.5) color(%85 %85 %85 %85) ///
+				color(stgreen stgreen stgreen stgreen)) ///
 				(rcap lower upper language_order) ///
-				(scatter mean_`x' language_order,msymbol(none) mlabel(mean_`x') mlabposition(12) mlabformat(%7.1f) mlabcolor(stblue)) ///
-				,legend(off) ytitle("Interview duration (mins)") xtitle("Languages") ylabel(0 20 40 60 80 100,nogrid) ///
+				(scatter mean_`x' language_order,msymbol(none) mlabel(mean_`x') ///
+				mlabposition(12) mlabformat(%7.1f) mlabcolor(stblue)) ///
+				,legend(off) ytitle("Interview duration (mins)") xtitle("Languages") ///
+				ylabel(0 20 40 60 80 100,nogrid) ///
 				xlabel(,nogrid valuelabel) yline(45) note(Round 9 data only)
 			}
 
 			if "`x'"=="wordcount"{
-				twoway (bar mean_`x' wordcount_order, barwidth(0.5) color(%85 %85 %85 %85) color(stblue)) ///
-				(rcap lower upper wordcount_order) ///
-				(scatter mean_`x' wordcount_order, msymbol(none) mlabel(mean_`x') mlabposition(12) mlabformat(%7.1f) mlabcolor(stgreen)) ///
-				,legend(off) ytitle("Average word count") xtitle("Languages") ylabel(0 2000 4000 6000 8000 10000,nogrid) ///
+				twoway (bar mean_`x' wordcount_order, barwidth(0.5) color(%85 %85 %85 %85) ///
+				color(stblue)) (rcap lower upper wordcount_order) ///
+				(scatter mean_`x' wordcount_order, msymbol(none) mlabel(mean_`x') ///
+				mlabposition(12) mlabformat(%7.1f) mlabcolor(stgreen)) ///
+				,legend(off) ytitle("Average word count") xtitle("Languages") ///
+				ylabel(0 2000 4000 6000 8000 10000,nogrid) ///
 				xlabel(,nogrid valuelabel) note(Round 9 data only)
 			}
 
 			if "`x'"=="duration_per_word_seconds"{
-				twoway (bar mean_`x' question_order, barwidth(0.5) color(%85 %85 %85 %85) color(stgreen stgreen stgreen stgreen)) ///
+				twoway (bar mean_`x' question_order, barwidth(0.5) color(%85 %85 %85 %85) ///
+				color(stgreen stgreen stgreen stgreen)) ///
 				(rcap lower upper question_order) ///
-				(scatter mean_`x' question_order, msymbol(none) mlabel(mean_`x') mlabposition(12) mlabformat(%7.2f) mlabcolor(stblue)) ///
-				,legend(off) ytitle("Average word duration (secs)") xtitle("Languages") ylabel(0 0.2 0.4 0.6 0.8,nogrid) ///
+				(scatter mean_`x' question_order, msymbol(none) mlabel(mean_`x') ///
+				mlabposition(12) mlabformat(%7.2f) mlabcolor(stblue)) ///
+				,legend(off) ytitle("Average word duration (secs)") xtitle("Languages") ///
+				ylabel(0 0.2 0.4 0.6 0.8,nogrid) ///
 				xlabel(,nogrid valuelabel) note(Round 9 data only)
 			}
 
@@ -504,10 +536,14 @@ if `language'==1{
 
 		labvars interviewer_mean respondent_mean fluency_mean "Interviewer native" "Respondent native" "Fluency match"
 
-		twoway (scatter interviewer_mean interviewer_native, connect(l) mlabel(interviewer_mean) mlabposition(6) mlabformat(%7.1f)) ///
-		(scatter respondent_mean respondent_native, connect(l) mlabel(respondent_mean) mlabposition(12) mlabformat(%7.1f)) ///
-		(scatter fluency_mean fluency_match, connect(l) mlabel(fluency_mean) mlabposition(3) mlabformat(%7.1f)) ///
-		, ylabel(,nogrid) ytitle("Interview duration (mins)") xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only)
+		twoway (scatter interviewer_mean interviewer_native, connect(l) ///
+		mlabel(interviewer_mean) mlabposition(6) mlabformat(%7.1f)) ///
+		(scatter respondent_mean respondent_native, connect(l) ///
+		mlabel(respondent_mean) mlabposition(12) mlabformat(%7.1f)) ///
+		(scatter fluency_mean fluency_match, connect(l) mlabel(fluency_mean) ///
+		mlabposition(3) mlabformat(%7.1f)) ///
+		, ylabel(,nogrid) ytitle("Interview duration (mins)") ///
+		xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only)
 
 		graph export "$MNFIG/scatter_fluency.jpg", as(jpg) quality(100) name("Graph") replace
 
@@ -538,12 +574,18 @@ if `dyads'==1{
 
 		labvars match_mean mm_mean ff_mean mf_mean fm_mean "Gender match" "Male-male" "Female-female" "Male-female" "Female-male"
 
-		twoway (scatter match_mean GENDER_MATCH, connect(l) mlabel(match_mean) mlabposition(12) mlabformat(%7.1f)) ///
-		(scatter mm_mean mm_dyad, connect(l) mlabel(mm_mean) mlabposition(6) mlabformat(%7.1f)) ///
-		(scatter ff_mean ff_dyad, connect(l) mlabel(ff_mean) mlabposition(6) mlabformat(%7.1f)) ///
-		(scatter mf_mean mf_dyad, connect(l) mlabel(mf_mean) mlabposition(3) mlabformat(%7.1f)) ///
-		(scatter fm_mean fm_dyad, connect(l) mlabel(fm_mean) mlabposition(12) mlabformat(%7.1f)) ///
-		, ylabel(,nogrid) ytitle("Interview duration (mins)") xlabel(0 "No" 1 "Yes", val nogrid) xtitle("") note(Round 9 data only)
+		twoway (scatter match_mean GENDER_MATCH, connect(l) ///
+		mlabel(match_mean) mlabposition(12) mlabformat(%7.1f)) ///
+		(scatter mm_mean mm_dyad, connect(l) mlabel(mm_mean) ///
+		mlabposition(6) mlabformat(%7.1f)) ///
+		(scatter ff_mean ff_dyad, connect(l) mlabel(ff_mean) ///
+		mlabposition(6) mlabformat(%7.1f)) ///
+		(scatter mf_mean mf_dyad, connect(l) mlabel(mf_mean) ///
+		mlabposition(3) mlabformat(%7.1f)) ///
+		(scatter fm_mean fm_dyad, connect(l) mlabel(fm_mean) ///
+		mlabposition(12) mlabformat(%7.1f)) ///
+		, ylabel(,nogrid) ytitle("Interview duration (mins)") ///
+		xlabel(0 "No" 1 "Yes", val nogrid) xtitle("") note(Round 9 data only)
 
 
 		graph export "$MNFIG/scatter_genderdyad.jpg", as(jpg) quality(100) name("Graph") replace
@@ -582,10 +624,14 @@ if `dyads'==1{
 
 		labvars match_mean yy_mean yo_mean "Age match" "Young-young" "Young-old"
 
-		twoway (scatter match_mean AGE_MATCH, connect(l) mlabel(match_mean) mlabposition(6) mlabformat(%7.1f)) ///
-		(scatter yy_mean young_match, connect(l) mlabel(yy_mean) mlabposition(1) mlabformat(%7.1f)) ///
-		(scatter yo_mean young_old, connect(l) mlabel(yo_mean) mlabposition(12) mlabformat(%7.1f)) ///
-		, ylabel(,nogrid) ytitle("Interview duration (mins)") xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only)
+		twoway (scatter match_mean AGE_MATCH, connect(l) mlabel(match_mean) ///
+		mlabposition(6) mlabformat(%7.1f)) ///
+		(scatter yy_mean young_match, connect(l) mlabel(yy_mean) ///
+		mlabposition(1) mlabformat(%7.1f)) ///
+		(scatter yo_mean young_old, connect(l) mlabel(yo_mean) ///
+		mlabposition(12) mlabformat(%7.1f)) ///
+		, ylabel(,nogrid) ytitle("Interview duration (mins)") ///
+		xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only)
 
 		graph export "$MNFIG/scatter_age.jpg", as(jpg) quality(100) name("Graph") replace
 
@@ -610,8 +656,11 @@ if `endtime'==1{
 
 		label var LENGTH "Afternoon end-time"
 
-		twoway (scatter LENGTH ENDTIME_HRS_DUM, connect(l) mlabel(LENGTH) mlabposition(3) mlabformat(%7.1f)) ///
-		, ylabel(,nogrid) ytitle("Interview duration (mins)") xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") note(Round 9 data only) legend(on)
+		twoway (scatter LENGTH ENDTIME_HRS_DUM, connect(l) mlabel(LENGTH) ///
+		mlabposition(3) mlabformat(%7.1f)) ///
+		, ylabel(,nogrid) ytitle("Interview duration (mins)") ///
+		xlabel(0 1,nogrid) xtitle("") xlabel(0 "No" 1 "Yes") ///
+		note(Round 9 data only) legend(on)
 
 		graph export "$MNFIG/scatter_endtime.jpg", as(jpg) quality(100) name("Graph") replace
 
@@ -651,15 +700,20 @@ if `sections'==1{
 	***make bar graph for section duration 
 	
 	catcibar DUR1_10_R9-DUR90_99_R9 ///
-	,  ylabel(0 2 4 6 8 10 12,nogrid)  ytitle("Section duration (mins)") xlabel(, nogrid labsize(vsmall)) xtitle(Questionnaire section) ///
-	color(%85 %85 %85 %85) note(Round 9 data only) mlabel(mean) mlabf(%7.1f) mlabc(green*0.7)
+	,  ylabel(0 2 4 6 8 10 12,nogrid)  ytitle("Section duration (mins)") ///
+	xlabel(, nogrid labsize(vsmall)) xtitle(Questionnaire section) ///
+	color(%85 %85 %85 %85) note(Round 9 data only) mlabel(mean) ///
+	mlabf(%7.1f) mlabc(green*0.7)
 
 	graph export "$MNFIG/bar_section_duration.jpg", as(jpg) quality(100) name("Graph") replace
 
 	catcibar s1_dur_perq_secs-s10_dur_perq_secs ///
-	,  ylabel(0 5 10 15 20 25 30,nogrid)  ytitle("Section duration per question (secs)") xtitle(Questionnaire section) ///
-	xlabel(, nogrid labsize(vsmall)) color(%85 %85 %85 %85) note(Round 9 data only) mlabel(mean) mlabf(%7.1f) mlabc(green*0.7)
+	,  ylabel(0 5 10 15 20 25 30,nogrid)  ytitle("Section duration per question (secs)") ///
+	xtitle(Questionnaire section) ///
+	xlabel(, nogrid labsize(vsmall)) color(%85 %85 %85 %85) ///
+	note(Round 9 data only) mlabel(mean) mlabf(%7.1f) mlabc(green*0.7)
 
-	graph export "$MNFIG/bar_section_duration_question.jpg", as(jpg) quality(100) name("Graph") replace
+	graph export "$MNFIG/bar_section_duration_question.jpg", ///
+	as(jpg) quality(100) name("Graph") replace
 
 }
