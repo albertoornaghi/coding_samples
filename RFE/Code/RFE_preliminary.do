@@ -7,11 +7,11 @@ include "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper/pathnames.
 
 ***set locals for running code
 
-local sample_dropouts			0
-local summary_tables			0
-local graphs					0
-local balance_table				0
-local diff_in_means				0
+local sample_dropouts			1
+local summary_tables			1
+local graphs					1
+local balance_table				1
+local diff_in_means				1
 
 use "$RFEDATA/RFE_data_clean.dta", clear
 
@@ -67,19 +67,21 @@ if `sample_dropouts'==1{
 
 if `summary_tables'==1{
 
-***create table summarising sample size and treatment group allocations
+	***create table summarising sample size and treatment group allocations
 
-gen sample_size = control+group1+group2+group3
-tab sample_size
-label var sample_size "Full Sample"
+	gen sample_size = control+group1+group2+group3
+	tab sample_size
+	label var sample_size "Full Sample"
 
-table () (result), stat(total control group1 group2 group3 sample_size) stat(mean control group1 group2 group3) nformat(%7.2f)
+	table () (result), stat(total control group1 group2 group3 sample_size) ///
+	stat(mean control group1 group2 group3) nformat(%7.2f)
 
 	local table "sample"
 	include "$HELPER/table_formatting.do"
 	collect export "$RFETAB/sample_size", as(tex) replace
 
-***create table summarising demographic characteristics - three separate tables: basics e.g. age, gender etc, income, partisanship
+	***create table summarising demographic characteristics - three 
+	//separate tables: basics e.g. age, gender etc, income, partisanship
 
 	local genders female male non_binary
 	
@@ -92,7 +94,8 @@ table () (result), stat(total control group1 group2 group3 sample_size) stat(mea
 		local i = `i' + 1
 	} 
 	
-	table () (result), stat(total `genders' uk_res) stat(mean `genders' age education uk_res) stat(sd `genders' age education uk_res) nformat(%7.2f)
+	table () (result), stat(total `genders' uk_res) stat(mean `genders' age education uk_res) ///
+	stat(sd `genders' age education uk_res) nformat(%7.2f)
 
 	local table "mean_sd"
 	include "$HELPER/table_formatting.do"
@@ -126,7 +129,8 @@ table () (result), stat(total control group1 group2 group3 sample_size) stat(mea
 		label variable `x' "`variable_label'"
 	}
 
-	table () (result), stat(total partisanship1-partisanship9) stat(mean partisanship1-partisanship9) stat(sd partisanship1-partisanship9) nformat(%7.2f)
+	table () (result), stat(total partisanship1-partisanship9) ///
+	stat(mean partisanship1-partisanship9) stat(sd partisanship1-partisanship9) nformat(%7.2f)
 
 	local table "mean_sd"
 	include "$HELPER/table_formatting.do"
@@ -175,7 +179,8 @@ table () (result), stat(total control group1 group2 group3 sample_size) stat(mea
 
 	***create table summarising experimental stimuli agreement
 
-	table () (result), stat(mean control_statement_1-group3_statement_14) stat(sd control_statement_1-group3_statement_14)  nformat(%7.2f)
+	table () (result), stat(mean control_statement_1-group3_statement_14) ///
+	stat(sd control_statement_1-group3_statement_14)  nformat(%7.2f)
 
 	local table "mean_sd"
 	include "$HELPER/table_formatting.do"
@@ -228,16 +233,26 @@ if `graphs'==1{
 if `balance_table'==1{	
 ***balance table
 
-foreach x of varlist gender-partisanship pre_policy-pre_behaviours{
-	reg `x' group1 group2 group3, robust
-	estimates store bt_`x'
+	foreach x of varlist gender-partisanship pre_policy-pre_behaviours{
+	
+		reg `x' group1 group2 group3, robust
+		estimates store bt_`x'
+	
+	}
+
+	etable, estimates(bt_gender bt_age bt_uk_res bt_education bt_income bt_partisanship) ///
+	stars(0.1 "*" 0.05 "**" 0.01 "***", attach(_r_b)) keep(group1 group2 group3 total) ///
+	showstars showstarsnote eqrecode(gender=dv age=dv uk_res=dv education=dv income=dv ///
+	partisanship=dv) col(dvlabel) export($RFETAB/balancetable1.tex,replace)
+
+	etable, estimates(bt_pre_policy bt_pre_activism bt_pre_anxiety bt_pre_norms ///
+	bt_pre_justice bt_pre_behaviours) stars(0.1 "*" 0.05 "**" 0.01 "***", attach(_r_b)) ///
+	keep(group1 group2 group3 total) showstars showstarsnote eqrecode( pre_policy=dv ///
+	pre_activism=dv pre_anxiety=dv pre_norms=dv pre_justice=dv pre_behaviours=dv) ///
+	col(dvlabel) export($RFETAB/balancetable2.tex,replace)
+
 }
 
-etable, estimates(bt_gender bt_age bt_uk_res bt_education bt_income bt_partisanship) stars(0.1 "*" 0.05 "**" 0.01 "***", attach(_r_b)) keep(group1 group2 group3 total) showstars showstarsnote eqrecode(gender=dv age=dv uk_res=dv education=dv income=dv partisanship=dv) col(dvlabel) export($RFETAB/balancetable1.tex,replace)
-
-etable, estimates(bt_pre_policy bt_pre_activism bt_pre_anxiety bt_pre_norms bt_pre_justice bt_pre_behaviours) stars(0.1 "*" 0.05 "**" 0.01 "***", attach(_r_b)) keep(group1 group2 group3 total) showstars showstarsnote eqrecode( pre_policy=dv pre_activism=dv pre_anxiety=dv pre_norms=dv pre_justice=dv pre_behaviours=dv) col(dvlabel) export($RFETAB/balancetable2.tex,replace)
-
-}
 
 if `diff_in_means'==1{
 
@@ -252,7 +267,8 @@ if `diff_in_means'==1{
 	collect label levels result Diff "Diff-in-Means", modify
 	collect label levels result Mean1 "Mean 1", modify
 	collect label levels result Mean2 "Mean 2", modify
-	collect label levels command 1 "Radical Awareness = Moderate Awareness" 2 "Radical Perception = Moderate Perception", modify
+	collect label levels command 1 "Radical Awareness = Moderate Awareness" ///
+	2 "Radical Perception = Moderate Perception", modify
 	collect label levels result Sample1 "Sample 1", modify	
 	collect label levels result Sample2 "Sample 2", modify
 	collect stars p .01 `"***"' .05 `"**"' .1 `"*"', attach(Difference) shownote
@@ -310,13 +326,14 @@ if `diff_in_means'==1{
 		}
 	}
 
-		***create tables with results for each "column" variable in matrix
+	***create tables with results for each "column" variable in matrix
 	
 	*** Number of macros to create
 	local num_macros = 8
 
 	*** Loop through each macro
 	forvalues i = 0/`=`num_macros'-1' {
+		
 		local start = `i'*8 + 1
 		local end = `start' + 7
 
@@ -326,6 +343,7 @@ if `diff_in_means'==1{
 		
 		forvalues j = `start'/`end' {
 			local numbers`i' "`numbers`i'' `j'"
+			
 		}
 	}
 

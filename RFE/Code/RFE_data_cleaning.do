@@ -127,9 +127,11 @@ if `clean_data'==1{
 
 	***label all values
 
-	label define likertoppose 0 "Strongly oppose" 1 "Somewhat oppose" 2 "Neither support nor oppose" 3 "Somewhat support" 4 "Strongly support"
+	label define likertoppose 0 "Strongly oppose" 1 "Somewhat oppose" ///
+	2 "Neither support nor oppose" 3 "Somewhat support" 4 "Strongly support"
 
-	label define likertagree 0 "Strongly disagree" 1 "Somewhat disagree" 2 "Neither agree nor disagree" 3 "Somewhat agree" 4 "Strongly agree"
+	label define likertagree 0 "Strongly disagree" 1 "Somewhat disagree" ///
+	2 "Neither agree nor disagree" 3 "Somewhat agree" 4 "Strongly agree"
 
 	foreach x of varlist pre_policy_1-pre_activism_3{
 		label values `x' likertoppose
@@ -293,7 +295,8 @@ if `clean_data'==1{
 
 	labvars pre_policy pre_activism pre_anxiety pre_norms pre_justice pre_behaviours ///
 	"Pre-treatment policy support" "Pre-treatment activism support" "Pre-treatment eco-anxiety" ///
-	"Pre-treatment environmental norms" "Pre-treatment environmental justice beliefs" "Pre-treatment sustainable behaviours"
+	"Pre-treatment environmental norms" "Pre-treatment environmental justice beliefs" ///
+	"Pre-treatment sustainable behaviours"
 
 	***create treatment group indicator dummies
 

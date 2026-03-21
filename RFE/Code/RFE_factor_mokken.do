@@ -9,8 +9,8 @@ include "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper/pathnames.
 ***set locals for running code
 
 local factor					1
-local mokken					0
-local irt						0
+local mokken					1
+local irt						1
 
 use "$RFEDATA/RFE_data_clean.dta", clear
 
@@ -85,11 +85,13 @@ if `mokken'==1{
 
 if `irt'==1{
 
-///run tests for difficulty
+	///run tests for difficulty
 
-irt grm post_activism_radical_1 post_activism_radical_2 post_activism_radical_3 post_activism_radical_4, nolog //fit graded response model to test for difficulty of items and discrimination parameters
+	irt grm post_activism_radical_1 post_activism_radical_2 post_activism_radical_3 ///
+	post_activism_radical_4, nolog //fit graded response model to test for difficulty of items and discrimination parameters
 
-irtgraph icc 1.post_activism_radical_* 4.post_activism_radical_*, bcc xlabel(,nogrid) ylabel(,nogrid) legend(size(vsmall)) title("") //plot out item response functions to check (visually) the difficult and dscrimination parameters of the various items
+	irtgraph icc 1.post_activism_radical_* 4.post_activism_radical_*, ///
+	bcc xlabel(,nogrid) ylabel(,nogrid) legend(size(vsmall)) title("") //plot out item response functions to check (visually) the difficult and dscrimination parameters of the various items
 
 
 
