@@ -22,19 +22,16 @@ if `import'==1{
 		save "$MNDATA/`file'"
 	}
 
-	local filelist "$MNDATA/ANGOLA.xlsx" "$MNDATA/BENIN.xlsx" "$MNDATA/BFO.xlsx" "$MNDATA/BOTSWANA.xlsx" "$MNDATA/CAMEROON.xlsx" ///
-	"$MNDATA/CBZ.xlsx" "$MNDATA/CDI.xlsx" "$MNDATA/CVE.xlsx" "$MNDATA/ESWATINI.xlsx" "$MNDATA/ETH.xlsx" "$MNDATA/GABON.xlsx" /// 
-	"$MNDATA/GAMBIA.xlsx" "$MNDATA/GHA.xlsx" "$MNDATA/GUI.xlsx" "$MNDATA/KEN.xlsx" "$MNDATA/LES.xlsx" "$MNDATA/LIB.xlsx" /// 
-	"$MNDATA/MAD.xlsx" "$MNDATA/MALI.xlsx" "$MNDATA/MAU.xlsx" "$MNDATA/MLW.xlsx" "$MNDATA/MOR.xlsx" "$MNDATA/MOZ.xlsx" ///
-	"$MNDATA/MRT.xlsx" "$MNDATA/NAM.xlsx" "$MNDATA/NGR.xlsx" "$MNDATA/NIG.xlsx" "$MNDATA/SAF.xlsx" "$MNDATA/SEN.xlsx" ///
-	"$MNDATA/SEY.xlsx" "$MNDATA/SRL.xlsx" "$MNDATA/STP.xlsx" "$MNDATA/SUD.xlsx" "$MNDATA/TAN.xlsx" "$MNDATA/TOG.xlsx" ///
-	"$MNDATA/TUN.xlsx" "$MNDATA/USA.xlsx" "$MNDATA/ZAM.xlsx" "$MNDATA/ZIM.xlsx"
+	local filelist "ANGOLA" "BENIN" "BFO" "BOTSWANA" "CAMEROON" "CBZ" "CDI" "CVE" "ESWATINI" ///
+	"ETH" "GABON" "GAMBIA" "GHA" "GUI" "KEN" "LES" "LIB" "MAD" "MALI" ///
+	"MAU" "MLW" "MOR" "MOZ" "MRT" "NAM" "NGR" "NIG" "SAF" "SEN" ///
+	"SEY" "SRL" "STP" "SUD" "TAN" "TOG" "TUN" "USA" "ZAM" "ZIM"
 
 	*** Import and save all translation files in Stata format
 	
 	foreach `file' of local filelist{
-		import excel "`file'", sheet("Sheet1") clear
-		save "`file'.dta"
+		import excel "$MNDATA/`file'.xlsx", sheet("Sheet1") clear
+		save "$MNDATA/`file'.dta"
 	}
 
 	*** Main dataset files were saved directly to Stata format using IBM SPSS
@@ -101,114 +98,121 @@ if `merge'==1 {
 
 if `word_count'==1{
 
-***below we prepare the wordcount datasets for one country (Angola), this method is then repeated for all other countries - this process cannot be automated as the languages offered differ in each country and the files are not standardised
+	***below we prepare the wordcount datasets for one country (Angola)
+	//, this method is then repeated for all other countries - this process
+	//cannot be automated as the languages offered differ in each country 
+	//and the files are not standardised
 
-use "ANGOLA.dta" 
+	use "ANGOLA.dta" 
 
-*** create idetifier for text type and standardise to includ eonly identifiers for type
+	*** create idetifier for text type and standardise to includ eonly identifiers for type
 
-gen text_type = A
-ereplace text_type = sieve(text_type), omit(0123456789_SS)
-tab text_type
+	gen text_type = A
+	ereplace text_type = sieve(text_type), omit(0123456789_SS)
+	tab text_type
+	
+	*** drop all words not read out by interviewer to ensure wordcount variables do not include them 
 
-*** drop all words not read out by interviewer to ensure wordcount variables do not include them 
+	local txt `" "CH" "CN" "VR" "AA" "QI" "##" "**" "'
 
-drop if text_type == "CH"
-drop if text_type == "CN"
-drop if text_type == "VR"
-drop if text_type == "AA"
-drop if text_type == "QI"
-drop if text_type == "##"
-drop if text_type == "**"
-tab text_type
+	foreach x of local txt{
+	
+		drop if text_type == "`x'"
+	
+	}
 
-*** create variables counting words by language in each observation
+	tab text_type
 
-gen portuguese_count = wordcount(C)
-gen english_count = wordcount(F)
-gen kikongo_count = wordcount(G)
-gen chokwe_count = wordcount(H)
-gen kwanhama_count = wordcount(I)
-gen nganguela_count = wordcount(J)
-gen nhaneca_count = wordcount(K)
-gen umbundu_count = wordcount(L)
+	*** create variables counting words by language in each observation
 
-*** drop variables (languages) with all missing values
+	gen portuguese_count = wordcount(C)
+	gen english_count = wordcount(F)
+	gen kikongo_count = wordcount(G)
+	gen chokwe_count = wordcount(H)
+	gen kwanhama_count = wordcount(I)
+	gen nganguela_count = wordcount(J)
+	gen nhaneca_count = wordcount(K)
+	gen umbundu_count = wordcount(L)
 
-drop M
-drop N
+	*** drop variables (languages) with all missing values
 
-*** generate variable taking the names of all the languages
+	drop M
+	drop N
 
-gen language = "Portuguese" in 1
-replace language = "English" in 2
-replace language = "Kikongo" in 3
-replace language = "Chokwe" in 4
-replace language = "Kwanhama" in 5
-replace language = "Nganguela" in 6
-replace language = "Nhaneca" in 7
-replace language = "Umbundu" in 8
+	*** generate variable taking the names of all the languages
 
-*** generate variable with word count totals for each language
+	gen language = "Portuguese" in 1
+	replace language = "English" in 2
+	replace language = "Kikongo" in 3
+	replace language = "Chokwe" in 4
+	replace language = "Kwanhama" in 5
+	replace language = "Nganguela" in 6
+	replace language = "Nhaneca" in 7
+	replace language = "Umbundu" in 8
 
-sum( portuguese_count)
-display r(sum)
-egen wordcount = sum( portuguese_count)
-sum( english_count)
-display r(sum)
-replace wordcount = r(sum) in 2
-sum( kikongo_count)
-display r(sum)
-replace wordcount = r(sum) in 3
-sum( chokwe_count)
-display r(sum)
-replace wordcount = r(sum) in 4
-sum( kwanhama_count)
-display r(sum)
-replace wordcount = r(sum) in 5
-sum( nganguela_count)
-display r(sum)
-replace wordcount = r(sum) in 6
-sum( nhaneca_count)
-display r(sum)
-replace wordcount = r(sum) in 7
-sum( umbundu_count)
-display r(sum)
-replace wordcount = r(sum) in 8
-sum( portuguese_count)
-display r(sum)
-replace wordcount=. if wordcount==r(sum)
-sum( portuguese_count)
-display r(sum)
-replace wordcount = r(sum) in 1
+	*** generate variable with word count totals for each language
 
-*** through the method above we generate extra variables directly in the translation files that identify each language and the wordcount of th equestionnaire in this language
-*** the same method is then used for all other languages
+	sum( portuguese_count)
+	display r(sum)
+	egen wordcount = sum( portuguese_count)
+	sum( english_count)
+	display r(sum)
+	replace wordcount = r(sum) in 2
+	sum( kikongo_count)
+	display r(sum)
+	replace wordcount = r(sum) in 3
+	sum( chokwe_count)
+	display r(sum)
+	replace wordcount = r(sum) in 4
+	sum( kwanhama_count)
+	display r(sum)
+	replace wordcount = r(sum) in 5
+	sum( nganguela_count)
+	display r(sum)
+	replace wordcount = r(sum) in 6
+	sum( nhaneca_count)
+	display r(sum)
+	replace wordcount = r(sum) in 7
+	sum( umbundu_count)
+	display r(sum)
+	replace wordcount = r(sum) in 8
+	sum( portuguese_count)
+	display r(sum)
+	replace wordcount=. if wordcount==r(sum)
+	sum( portuguese_count)
+	display r(sum)
+	replace wordcount = r(sum) in 1
+
+	*** through the method above we generate extra variables directly 
+	//in the translation files that identify each language and the 
+	//wordcount of th equestionnaire in this language
+	*** the same method is then used for all other languages
 
 
 
-*** using these new files with the wordcounts we put them together into one wqordcount file for all ocuntries and languages
+	*** using these new files with the wordcounts we put them together 
+	//into one wqordcount file for all ocuntries and languages
+	
+	use "$MNDATA\ANGOLA.dta"
 
-use "MNDATA\ANGOLA.dta"
+	*** Create identifiers for round and country which match those in the main dataset
 
-*** Create identifiers for round and country which match those in the main dataset
+	gen round = 9
+	gen countrycode = "ANG"
+	drop if wordcount == .
+	save "$MNDATA/ANGOLA_count.dta"
 
-gen round = 9
-gen countrycode = "ANG"
-drop if wordcount == .
-save "MNDATA\ANGOLA_count.dta"
+	*** Repeat above steps for all the translation files for the different countries
 
-*** Repeat above steps for all the translation files for the different countries
+	*** Append to angola file the files for other countries and drop all variables except wordcounts 
 
-*** Append to angola file the files for other countries and drop all variables except wordcounts 
+	append using "$MNDATA/BENIN_count.dta"
+	keep wordcount language country round
 
-append using "MNDATA\BENIN_count.dta"
-keep wordcount language country round
+	*** repeat with all files until a full dataset including all countries,languages and their wordcounts is created
 
-*** repeat with all files until a full dataset including all countries,languages and their wordcounts is created
-
-tempfile word_counts
-save `word_counts'
+	tempfile word_counts
+	save `word_counts'
 
 }
 
@@ -269,7 +273,6 @@ if `final_dataset'==1{
 
 	***drop any observations not merged becuase they are only in the using data 
 
-	tab _merge
 	drop if _merge == 2
 	
 	save "$MNDATA/AB_dataset_final"
@@ -317,8 +320,8 @@ if `demo_dyad_vars'==1{
 
 	foreach x of varlist RESP_EDUC EMPLOY_STAT AGE_YEARS{
 	
-		replace `x'=. if `x'==-1|`x'==99|`x'==98|`x'==998|`x'==999|`x'==8|`x'==9|`x'==9994
-	
+		replace `x'=. if inlist(`x', -1,99,98,998,999,8,9,9994) > 0
+		
 	}
 
 
@@ -465,135 +468,171 @@ if `demo_dyad_vars'==1{
 
 if `section'==1{
 
-*** inspect distributions for mean section duration
-*** clean variables to remove any negative observations and any above 400/10=40 minutes to reflect AB's guideline maximum interview length
+	
+	*** clean variables to remove any negative observations and any 
+	//above 400/10=40 minutes to reflect AB's guideline maximum interview length
 
-egen section_mean_time = rmean(DUR1_10_R9 - DUR90_99_R9)
+	egen section_mean_time = rmean(DUR1_10_R9 - DUR90_99_R9)
 
-foreach x of varlist DUR1_10_R9-DUR90_99_R9{
-	replace `x'=. if `x'<0|`x'>40
-}
+	foreach x of varlist DUR1_10_R9-DUR90_99_R9{
+		replace `x'=. if `x'<0|`x'>40
+	}
 
-***generate variables for number of questions in section
+	***generate variables for number of questions in section
 
-gen section_1_qs =Q110Demo + Q110MC + Q110Scale + Q1102S + Q110YN + Q110OE
-gen section_2_qs = Q1119Demo + Q1119MC + Q1119Scale + Q11192S + Q1119YN + Q1119OE
-gen section_3_qs = Q2029Demo + Q2029MC + Q2029Scale + Q20292S + Q2029YN + Q2029OE
-gen section_4_qs = Q3039Demo + Q3039MC + Q3039Scale + Q30392S + Q3039YN + Q3039OE
-gen section_5_qs = Q4049Demo + Q4049MC + Q4049Scale + Q40492S + Q4049YN + Q4049OE
-gen section_6_qs = Q5059Demo + Q5059MC + Q5059Scale + Q50592S + Q5059YN + Q5059OE
-gen section_7_qs = Q6069Demo + Q6069MC + Q6069Scale + Q60692S + Q6069YN + Q6069OE
-gen section_8_qs = Q7079Demo + Q7079MC + Q7079Scale + Q70792S + Q7079YN + Q7079OE
-gen section_9_qs = Q8089Demo + Q8089MC + Q8089Scale + Q80892S + Q8089YN + Q8089OE
-gen section_10_qs = Q9099Demo + Q9099MC + Q9099Scale + Q90992S + Q9099YN + Q9099OE
+	egen section_1_qs = rowsum(Q110*) 
+	gen section_2_qs = rowsum(Q1119*) 
+	gen section_3_qs = rowsum(Q2029*) 
+	gen section_4_qs = rowsum(Q3039*) 
+	gen section_5_qs = rowsum(Q4049*) 
+	gen section_6_qs = rowsum(Q5059*) 
+	gen section_7_qs = rowsum(Q6069*) 
+	gen section_8_qs = rowsum(Q7079*) 
+	gen section_9_qs = rowsum(Q8089*) 
+	gen section_10_qs = rowsum(Q9099*) 
 
-***generate variable section_duration_per_q_seconds for the duration divided by the number of questions in seconds for each question
+	***generate variable section_duration_per_q_seconds for the 
+	//duration divided by the number of questions in seconds for each question
 
-gen section_1_duration_per_q_seconds = ( DUR1_10_R9/section_1_qs)*60
-summ section_1_duration_per_q_seconds
-gen section_2_duration_per_q_seconds = ( DUR11_19_R9 /section_2_qs)*60
-gen section_3_duration_per_q_seconds = ( DUR20_29_R9 /section_3_qs)*60
-gen section_4_duration_per_q_seconds = ( DUR30_39_R9 /section_4_qs)*60
-gen section_5_duration_per_q_seconds = ( DUR40_49_R9 /section_5_qs)*60
-gen section_6_duration_per_q_seconds = ( DUR50_59_R9 /section_6_qs)*60
-gen section_7_duration_per_q_seconds = ( DUR60_69_R9 /section_7_qs)*60
-gen section_8_duration_per_q_seconds = ( DUR70_79_R9 /section_8_qs)*60
-gen section_9_duration_per_q_seconds = ( DUR80_89_R9 /section_9_qs)*60
-gen sect_10_duration_per_q_seconds = ( DUR90_99_R9 /section_10_qs)*60
+	gen section_1_duration_per_q_seconds = ( DUR1_10_R9/section_1_qs)*60
+	summ section_1_duration_per_q_seconds
+	gen section_2_duration_per_q_seconds = ( DUR11_19_R9 /section_2_qs)*60
+	gen section_3_duration_per_q_seconds = ( DUR20_29_R9 /section_3_qs)*60
+	gen section_4_duration_per_q_seconds = ( DUR30_39_R9 /section_4_qs)*60
+	gen section_5_duration_per_q_seconds = ( DUR40_49_R9 /section_5_qs)*60
+	gen section_6_duration_per_q_seconds = ( DUR50_59_R9 /section_6_qs)*60
+	gen section_7_duration_per_q_seconds = ( DUR60_69_R9 /section_7_qs)*60
+	gen section_8_duration_per_q_seconds = ( DUR70_79_R9 /section_8_qs)*60
+	gen section_9_duration_per_q_seconds = ( DUR80_89_R9 /section_9_qs)*60
+	gen sect_10_duration_per_q_seconds = ( DUR90_99_R9 /section_10_qs)*60
 
-*** generate variables for proportion of question types in each section
+	*** generate variables for proportion of question types in each section
 
-gen demo_weight_1= Q110Demo/section_1_qs
-gen demo_weight_2= Q1119Demo /section_2_qs
-gen demo_weight_3= Q2029Demo /section_3_qs
-gen demo_weight_4= Q3039Demo /section_4_qs
-gen demo_weight_5 = Q4049Demo /section_5_qs
-gen demo_weight_6 = Q5059Demo /section_6_qs
-gen demo_weight_7 = Q6069Demo /section_7_qs
-gen demo_weight_8  = Q7079Demo /section_8_qs
-gen demo_weight_9  = Q8089Demo /section_9_qs
-gen demo_weight_10  = Q9099Demo /section_10_qs
+	gen demo_weight_1= Q110Demo/section_1_qs
+	gen demo_weight_2= Q1119Demo /section_2_qs
+	gen demo_weight_3= Q2029Demo /section_3_qs
+	gen demo_weight_4= Q3039Demo /section_4_qs
+	gen demo_weight_5 = Q4049Demo /section_5_qs
+	gen demo_weight_6 = Q5059Demo /section_6_qs
+	gen demo_weight_7 = Q6069Demo /section_7_qs
+	gen demo_weight_8  = Q7079Demo /section_8_qs
+	gen demo_weight_9  = Q8089Demo /section_9_qs
+	gen demo_weight_10  = Q9099Demo /section_10_qs
 
-gen mc_weight_1= Q110MC/section_1_qs
-gen mc_weight_2= Q1119MC /section_2_qs
-gen mc_weight_3= Q2029MC /section_3_qs
-gen mc_weight_5 = Q4049MC /section_5_qs
-gen mc_weight_6 = Q5059MC /section_6_qs
-gen mc_weight_7 = Q6069MC /section_7_qs
-gen mc_weight_8  = Q7079MC /section_8_qs
-gen mc_weight_9  = Q8089MC /section_9_qs
-gen mc_weight_10  = Q9099MC /section_10_qs
-gen mc_weight_4= Q3039MC /section_4_qs
+	gen mc_weight_1= Q110MC/section_1_qs
+	gen mc_weight_2= Q1119MC /section_2_qs
+	gen mc_weight_3= Q2029MC /section_3_qs
+	gen mc_weight_5 = Q4049MC /section_5_qs
+	gen mc_weight_6 = Q5059MC /section_6_qs
+	gen mc_weight_7 = Q6069MC /section_7_qs
+	gen mc_weight_8  = Q7079MC /section_8_qs
+	gen mc_weight_9  = Q8089MC /section_9_qs
+	gen mc_weight_10  = Q9099MC /section_10_qs
+	gen mc_weight_4= Q3039MC /section_4_qs
 
-gen scale_weight_1= Q110Scale/section_1_qs
-gen scale_weight_2= Q1119Scale /section_2_qs
-gen scale_weight_3= Q2029Scale/section_3_qs
-gen scale_weight_4= Q3039Scale/section_4_qs
-gen scale_weight_5 = Q4049Scale /section_5_qs
-gen scale_weight_6 = Q5059Scale/section_6_qs
-gen scale_weight_7 = Q6069Scale/section_7_qs
-gen scale_weight_8  = Q7079Scale /section_8_qs
-gen scale_weight_9  = Q8089Scale/section_9_qs
-gen scale_weight_10  = Q9099Scale /section_10_qs
+	gen scale_weight_1= Q110Scale/section_1_qs
+	gen scale_weight_2= Q1119Scale /section_2_qs
+	gen scale_weight_3= Q2029Scale/section_3_qs
+	gen scale_weight_4= Q3039Scale/section_4_qs
+	gen scale_weight_5 = Q4049Scale /section_5_qs
+	gen scale_weight_6 = Q5059Scale/section_6_qs
+	gen scale_weight_7 = Q6069Scale/section_7_qs
+	gen scale_weight_8  = Q7079Scale /section_8_qs
+	gen scale_weight_9  = Q8089Scale/section_9_qs
+	gen scale_weight_10  = Q9099Scale /section_10_qs
 
-gen twos_weight_1= Q1102S/section_1_qs
-gen twos_weight_2= Q11192S /section_2_qs
-gen twos_weight_3= Q20292S/section_3_qs
-gen twos_weight_4= Q30392S/section_4_qs
-gen twos_weight_5 = Q40492S /section_5_qs
-gen twos_weight_6 = Q50592S/section_6_qs
-gen twos_weight_7 = Q60692S/section_7_qs
-gen twos_weight_8  = Q70792S/section_8_qs
-gen twos_weight_9  = Q80892S/section_9_qs
-gen twos_weight_10  = Q90992S/section_10_qs
+	gen twos_weight_1= Q1102S/section_1_qs
+	gen twos_weight_2= Q11192S /section_2_qs
+	gen twos_weight_3= Q20292S/section_3_qs
+	gen twos_weight_4= Q30392S/section_4_qs
+	gen twos_weight_5 = Q40492S /section_5_qs
+	gen twos_weight_6 = Q50592S/section_6_qs
+	gen twos_weight_7 = Q60692S/section_7_qs
+	gen twos_weight_8  = Q70792S/section_8_qs
+	gen twos_weight_9  = Q80892S/section_9_qs
+	gen twos_weight_10  = Q90992S/section_10_qs
 
-gen yn_weight_1= Q110YN/section_1_qs
-gen yn_weight_2= Q1119YN /section_2_qs
-gen yn_weight_3= Q2029YN/section_3_qs
-gen yn_weight_4= Q3039YN/section_4_qs
-gen yn_weight_5 = Q4049YN /section_5_qs
-gen yn_weight_6 = Q5059YN/section_6_qs
-gen yn_weight_7 = Q6069YN/section_7_qs
-gen yn_weight_8  = Q7079YN/section_8_qs
-gen yn_weight_9  = Q8089YN/section_9_qs
-gen yn_weight_10  = Q9099YN/section_10_qs
+	gen yn_weight_1= Q110YN/section_1_qs
+	gen yn_weight_2= Q1119YN /section_2_qs
+	gen yn_weight_3= Q2029YN/section_3_qs
+	gen yn_weight_4= Q3039YN/section_4_qs
+	gen yn_weight_5 = Q4049YN /section_5_qs
+	gen yn_weight_6 = Q5059YN/section_6_qs
+	gen yn_weight_7 = Q6069YN/section_7_qs
+	gen yn_weight_8  = Q7079YN/section_8_qs
+	gen yn_weight_9  = Q8089YN/section_9_qs
+	gen yn_weight_10  = Q9099YN/section_10_qs
 
-gen oe_weight_1= Q110OE/section_1_qs
-gen oe_weight_2= Q1119OE /section_2_qs
-gen oe_weight_3= Q2029OE/section_3_qs
-gen oe_weight_4= Q3039OE/section_4_qs
-gen oe_weight_5 = Q4049OE /section_5_qs
-gen oe_weight_6 = Q5059OE/section_6_qs
-gen oe_weight_7 = Q6069OE/section_7_qs
-gen oe_weight_8  = Q7079OE/section_8_qs
-gen oe_weight_9  = Q8089OE/section_9_qs
-gen oe_weight_10  = Q9099OE/section_10_qs
+	gen oe_weight_1= Q110OE/section_1_qs
+	gen oe_weight_2= Q1119OE /section_2_qs
+	gen oe_weight_3= Q2029OE/section_3_qs
+	gen oe_weight_4= Q3039OE/section_4_qs
+	gen oe_weight_5 = Q4049OE /section_5_qs
+	gen oe_weight_6 = Q5059OE/section_6_qs
+	gen oe_weight_7 = Q6069OE/section_7_qs
+	gen oe_weight_8  = Q7079OE/section_8_qs
+	gen oe_weight_9  = Q8089OE/section_9_qs
+	gen oe_weight_10  = Q9099OE/section_10_qs
 
-***create variables for overall proportion of questions
+	***create variables for overall proportion of questions
 
-gen demo_weight=TotalDemo/total_q
-gen mc_weight= TotalMC/total_q
-gen scale_weight= TotalScale/total_q
-gen twos_weight= Total2S/total_q
-gen yn_weight= TotalYN/total_q
-gen oe_weight= TotalOE/total_q
+	gen demo_weight=TotalDemo/total_q
+	gen mc_weight= TotalMC/total_q
+	gen scale_weight= TotalScale/total_q
+	gen twos_weight= Total2S/total_q
+	gen yn_weight= TotalYN/total_q
+	gen oe_weight= TotalOE/total_q
 
-***use weights for each question-type and section generated earlier to create proportion of qtypes table
+	***use weights for each question-type and section generated earlier to create proportion of qtypes table
 
-gen mean_demo_weighted = (demo_weight_1* DUR1_10_R9+demo_weight_2* DUR11_19_R9+demo_weight_3* DUR20_29_R9+demo_weight_4* DUR30_39_R9+demo_weight_5* DUR40_49_R9+demo_weight_6* DUR50_59_R9+demo_weight_7* DUR60_69_R9+demo_weight_8* DUR70_79_R9+demo_weight_9* DUR80_89_R9+demo_weight_10* DUR90_99_R9)/( demo_weight_1+ demo_weight_2+ demo_weight_3+ demo_weight_4+ demo_weight_5+ demo_weight_6+ demo_weight_7+ demo_weight_8+ demo_weight_9+ demo_weight_10)
+	gen mean_demo_weighted = (demo_weight_1* DUR1_10_R9+demo_weight_2* ///
+	DUR11_19_R9+demo_weight_3* DUR20_29_R9+demo_weight_4* DUR30_39_R9+ ///
+	demo_weight_5* DUR40_49_R9+demo_weight_6* DUR50_59_R9+demo_weight_7* ///
+	DUR60_69_R9+demo_weight_8* DUR70_79_R9+demo_weight_9* DUR80_89_R9+ ///
+	demo_weight_10* DUR90_99_R9)/( demo_weight_1+ demo_weight_2+ ///
+	demo_weight_3+ demo_weight_4+ demo_weight_5+ demo_weight_6+ ///
+	demo_weight_7+ demo_weight_8+ demo_weight_9+ demo_weight_10)
 
-gen mean_mc_weighted = (mc_weight_1* DUR1_10_R9+mc_weight_2* DUR11_19_R9+mc_weight_3* DUR20_29_R9+mc_weight_4* DUR30_39_R9+mc_weight_5* DUR40_49_R9+mc_weight_6* DUR50_59_R9+mc_weight_7* DUR60_69_R9+mc_weight_8* DUR70_79_R9+mc_weight_9* DUR80_89_R9+mc_weight_10* DUR90_99_R9)/( mc_weight_1+ mc_weight_2+ mc_weight_3+ mc_weight_4+ mc_weight_5+ mc_weight_6+ mc_weight_7+ mc_weight_8+ mc_weight_9+ mc_weight_10)
+	gen mean_mc_weighted = (mc_weight_1* DUR1_10_R9+mc_weight_2* ///
+	DUR11_19_R9+mc_weight_3* DUR20_29_R9+mc_weight_4* DUR30_39_R9+ ///
+	mc_weight_5* DUR40_49_R9+mc_weight_6* DUR50_59_R9+mc_weight_7* ///
+	DUR60_69_R9+mc_weight_8* DUR70_79_R9+mc_weight_9* DUR80_89_R9+ ///
+	mc_weight_10* DUR90_99_R9)/( mc_weight_1+ mc_weight_2+ mc_weight_3+ ///
+	mc_weight_4+ mc_weight_5+ mc_weight_6+ mc_weight_7+ mc_weight_8+ ///
+	mc_weight_9+ mc_weight_10)
 
-gen mean_scale_weighted = (scale_weight_1* DUR1_10_R9+scale_weight_2* DUR11_19_R9+scale_weight_3* DUR20_29_R9+scale_weight_4* DUR30_39_R9+scale_weight_5* DUR40_49_R9+scale_weight_6* DUR50_59_R9+scale_weight_7* DUR60_69_R9+scale_weight_8* DUR70_79_R9+scale_weight_9* DUR80_89_R9+scale_weight_10* DUR90_99_R9)/( scale_weight_1+ scale_weight_2+ scale_weight_3+ scale_weight_4+ scale_weight_5+ scale_weight_6+ scale_weight_7+ scale_weight_8+ scale_weight_9+ scale_weight_10)
+	gen mean_scale_weighted = (scale_weight_1* DUR1_10_R9+scale_weight_2* ///
+	DUR11_19_R9+scale_weight_3* DUR20_29_R9+scale_weight_4* DUR30_39_R9+ ///
+	scale_weight_5* DUR40_49_R9+scale_weight_6* DUR50_59_R9+scale_weight_7* ///
+	DUR60_69_R9+scale_weight_8* DUR70_79_R9+scale_weight_9* DUR80_89_R9+ ///
+	scale_weight_10* DUR90_99_R9)/( scale_weight_1+ scale_weight_2+ ///
+	scale_weight_3+ scale_weight_4+ scale_weight_5+ scale_weight_6+ ///
+	scale_weight_7+ scale_weight_8+ scale_weight_9+ scale_weight_10)
 
-gen mean_twos_weighted = (twos_weight_1* DUR1_10_R9+twos_weight_2* DUR11_19_R9+twos_weight_3* DUR20_29_R9+twos_weight_4* DUR30_39_R9+twos_weight_5* DUR40_49_R9+twos_weight_6* DUR50_59_R9+twos_weight_7* DUR60_69_R9+twos_weight_8* DUR70_79_R9+twos_weight_9* DUR80_89_R9+twos_weight_10* DUR90_99_R9)/(twos_weight_1+ twos_weight_2+ twos_weight_3+ twos_weight_4+ twos_weight_5+ twos_weight_6+ twos_weight_7+ twos_weight_8+ twos_weight_9+ twos_weight_10)
+	gen mean_twos_weighted = (twos_weight_1* DUR1_10_R9+twos_weight_2* ///
+	DUR11_19_R9+twos_weight_3* DUR20_29_R9+twos_weight_4* DUR30_39_R9+ ///
+	twos_weight_5* DUR40_49_R9+twos_weight_6* DUR50_59_R9+twos_weight_7* ///
+	DUR60_69_R9+twos_weight_8* DUR70_79_R9+twos_weight_9* DUR80_89_R9+ ///
+	twos_weight_10* DUR90_99_R9)/(twos_weight_1+ twos_weight_2+ twos_weight_3+ ///
+	twos_weight_4+ twos_weight_5+ twos_weight_6+ twos_weight_7+ twos_weight_8+ ///
+	twos_weight_9+ twos_weight_10)
 
-gen mean_yn_weighted = (yn_weight_1* DUR1_10_R9+yn_weight_2* DUR11_19_R9+yn_weight_3* DUR20_29_R9+yn_weight_4* DUR30_39_R9+yn_weight_5* DUR40_49_R9+yn_weight_6* DUR50_59_R9+yn_weight_7* DUR60_69_R9+yn_weight_8* DUR70_79_R9+yn_weight_9* DUR80_89_R9+yn_weight_10* DUR90_99_R9)/(yn_weight_1+ yn_weight_2+ yn_weight_3+ yn_weight_4+ yn_weight_5+ yn_weight_6+ yn_weight_7+ yn_weight_8+ yn_weight_9+ yn_weight_10)
+	gen mean_yn_weighted = (yn_weight_1* DUR1_10_R9+yn_weight_2* DUR11_19_R9 ///
+	+yn_weight_3* DUR20_29_R9+yn_weight_4* DUR30_39_R9+yn_weight_5* DUR40_49_R9+ ///
+	yn_weight_6* DUR50_59_R9+yn_weight_7* DUR60_69_R9+yn_weight_8* DUR70_79_R9+ ///
+	yn_weight_9* DUR80_89_R9+yn_weight_10* DUR90_99_R9)/(yn_weight_1+ yn_weight_2+ ///
+	yn_weight_3+ yn_weight_4+ yn_weight_5+ yn_weight_6+ yn_weight_7+ yn_weight_8+ ///
+	yn_weight_9+ yn_weight_10)
 
-gen mean_oe_weighted = (oe_weight_1* DUR1_10_R9+oe_weight_2* DUR11_19_R9+oe_weight_3* DUR20_29_R9+oe_weight_4* DUR30_39_R9+oe_weight_5* DUR40_49_R9+oe_weight_6* DUR50_59_R9+oe_weight_7* DUR60_69_R9+oe_weight_8* DUR70_79_R9+oe_weight_9* DUR80_89_R9+oe_weight_10* DUR90_99_R9)/(oe_weight_1+ oe_weight_2+ oe_weight_3+ oe_weight_4+ oe_weight_5+ oe_weight_6+ oe_weight_7+ oe_weight_8+ oe_weight_9+ oe_weight_10)
-summ mean_demo_weighted mean_mc_weighted mean_scale_weighted mean_twos_weighted mean_yn_weighted mean_oe_weighted
+	gen mean_oe_weighted = (oe_weight_1* DUR1_10_R9+oe_weight_2* DUR11_19_R9+ ///
+	oe_weight_3* DUR20_29_R9+oe_weight_4* DUR30_39_R9+oe_weight_5* DUR40_49_R9+ ///
+	oe_weight_6* DUR50_59_R9+oe_weight_7* DUR60_69_R9+oe_weight_8* DUR70_79_R9+ ///
+	oe_weight_9* DUR80_89_R9+oe_weight_10* DUR90_99_R9)/(oe_weight_1+ oe_weight_2+ ///
+	oe_weight_3+ oe_weight_4+ oe_weight_5+ oe_weight_6+ oe_weight_7+ oe_weight_8+ ///
+	oe_weight_9+ oe_weight_10)
+	
 
-save "MNDATA\AB_dataset_final.dta", replace
+	save "MNDATA\AB_dataset_final.dta", replace
 
 
 }

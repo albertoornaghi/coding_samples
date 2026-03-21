@@ -4,7 +4,6 @@ if "`table'"=="sample"{
 	collect style cell, border( all, width(0.5) pattern(single))
 	collect label levels result total "Sample Size" mean "Sample Proportion", modify
 	collect style cell, halign(left) valign(center)
-	collect style cell, nformat(%7.2f)
 
 
 }
