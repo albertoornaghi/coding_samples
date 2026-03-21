@@ -36,9 +36,9 @@ if "`project'"=="NEPS"{
 
 	global NEPSDATA "/Users/albertoornaghi/Desktop/PSE Files/Advanced Microeconometrics/NEPS Data" //data too big to store in GitHub
 
-	global NEPSCODE "$MAIN/Code"
+	global NEPSCODE "$NEPSMAIN/Code"
 
-	global NEPSFIG "$MAIN/Fig"
-	global NEPSTAB "$MAIN/Tables"
+	global NEPSFIG "$NEPSMAIN/Fig"
+	global NEPSTAB "$NEPSMAIN/Tables"
 	
 }
