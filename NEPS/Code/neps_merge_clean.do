@@ -126,12 +126,12 @@ if `merge_1'==1{
 	
 	sort ID_e wave
 	drop wave
-	duplicates drop ID_e, force //data is time-invariant!
+	duplicates drop ID_e, force //data is time-invariant
 	
 	
-	merge 1:m ID_e using `merge4', nogen //careful: NEPS instructions say that we should be able to assert (using match) but there are some ID_e observations that appear only in the master data!!! FIX THIS LATER ON!!! DO NOT IGNORE THIS PROBLEM!!!!
+	merge 1:m ID_e using `merge4', nogen 
 	
-	drop if ID_t ==. & wave==. //termporary code to fix the problem above CAREFUL!!
+	drop if ID_t ==. & wave==. 
 	
 	tempfile merge5
 	save `merge5'
@@ -200,8 +200,6 @@ if `merge_2'==1{
 
 
 if `clean1'==1{
-	
-	***CLEAN DATA: KEEP ONLY VARIABLES I NEED, RECODE MISSING VALUES ETC ETC ETC, DROP DATA ON POST GRADUATION WAVES I.E. DATA FOR WHICH TARGET COMPETENCIES IS NOT AVAILABLE!
 	
 	tempfile first_clean
 	save `first_clean'
@@ -388,7 +386,7 @@ if `attainment'==1{
 	
 	replace total_g5 = 28
 	replace total_g7 = 24
-	replace total_g9 = 35  //count total number of points available, assume refused/not reached/implausible means wrong
+	replace total_g9 = 35  //count total number of points available
 	
 	
 	foreach grade of local grades{
@@ -581,13 +579,7 @@ if `impute'==1{
 	tempfile clean1
 	save `clean1'
 	
-	//created separate class size with imputed values - test both later on!
-	
-	***I CAN DEFINITELY IMPROVE THE CODE BELOW WITH PROBABLY ONLY A COUPLE OF COLLAPSE COMMANDS, I CAN ///
-	GROUP ALL THE ONES THAT ARE BY THE SAME VARIABLE!!! DON'T WORRY ABOUT THIS, JUST MAYBE DO IT LATER IF ///
-	I UPLOAD THIS AS A CODING SAMPLE
-	
-	***BIG BIG PROBLEM: THIS IMPUTATION PROCEDURE MAKES ALL IMPUTED VARIABLES TIME-INVARIANT!!!!! PROBLEM FOR E.G. CLASS SIZE - IMPUTE ONLY THE MISSING VALUES UNLESS TRULY TIME-INVARIANT!!!
+	//created separate class size with imputed values - test both later on
 	
 	preserve
 	
@@ -786,9 +778,9 @@ if `impute'==1{
 	replace ever_tut_math = 0 if tutoring == 0 | tutoring_math==0
 	replace ever_tut_math = 1 if tutoring == 1 & tutoring_math==1
 	
-	label values ever_tut_math tut1 //THERE IS SOMETHING VERY WRONG HERE!!!!!
+	label values ever_tut_math tut1 
 	
-	***impute t_german_speaker CONTINUE FROM HERE!!!!
+	***impute t_german_speaker 
 	
 	
 	preserve
@@ -812,7 +804,7 @@ if `impute'==1{
 	label values t_german_speaker gs
 	
 	
-	***impute hh_size, hh_income, residency //HH_INCOME HAS A VERY VERY LARGE NUMBER OF MISSING, MAYBE SELECT A DIFFERENT "INCOME" VARIABLE!!
+	***impute hh_size, hh_income, residency
 	
 	
 	preserve
@@ -959,12 +951,6 @@ if `impute'==1{
 	drop ma_lesson_rem ma_lesson_canc t_country_birth t_sc1 t_sc2 t_sc3 t_gender1 ///
 	room_size_e cc_sen_perc1 cc_sen_perc
 
-	
-
-	***AT THE END, TRY TO DROP ALL THE OBS THAT ARE MISSING VALUES FOR MY CONTROL VARIABLES AND SEE WHAT THE PANEL LOOKS LIKE!!!!!!!
-	***THE NUMBER OF OBS WAS VERY VERY UNSTABLE WHEN I TRIED THE REGRESSIONS, DATA IS NOWHERE NEAR CLEAN YET!!!!
-	
-	***THIS OUTCOME IS VERY VERY VERY ODD...
 	
 	***define dummy for complete observation
 	
