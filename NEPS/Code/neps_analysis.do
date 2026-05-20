@@ -5,9 +5,6 @@ set maxvar 15000
 
 *** set file path globals
 
-
-global HELPER "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper"
-
 local project "NEPS"
 include "$HELPER/pathnames.do"
 
@@ -22,7 +19,7 @@ local mdqr				1
 
 ***load data
  
-use "$DATA/neps_clean.dta"
+use "$NEPSDATA/neps_clean.dta"
 
 tempfile data
 save `data'
@@ -44,7 +41,7 @@ if `summary'==1{
 	local table sample
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_sample.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_sample.tex", as(tex) replace
 
 	***outcome variable std percentiles summary
 
@@ -65,7 +62,7 @@ if `summary'==1{
 	collect style cell, border( all, width(0.5) pattern(single))
 	collect style cell, halign(left) valign(center)
 	
-	collect export "$TAB/neps_score_perc.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_score_perc.tex", as(tex) replace
 	
 	***outcome variable non-std percentiles summary
 	
@@ -93,7 +90,7 @@ if `summary'==1{
 	collect style cell, border( all, width(0.5) pattern(single))
 	collect style cell, halign(left) valign(center)
 	
-	collect export "$TAB/neps_score_perc_ns.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_score_perc_ns.tex", as(tex) replace
 	
 	
 	***class_size and class_size_imp table_formatting
@@ -122,14 +119,14 @@ if `summary'==1{
 	local table total_prop
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_size.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_size.tex", as(tex) replace
 	
 	table () (result), stat(median class_size_imp) stat(total size_imp*) stat(mean size_imp*) nformat(%7.2g)
 	
 	local table total_prop
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_size_imp.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_size_imp.tex", as(tex) replace
 	
 	
 	***summarise most important control variables - student level
@@ -174,7 +171,7 @@ if `summary'==1{
 	local table tot_prop_sd
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_controls_t.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_controls_t.tex", as(tex) replace
 	
 	
 	***summarise most important control variables - teacher level
@@ -210,7 +207,7 @@ if `summary'==1{
 	local table tot_prop_sd
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_controls_e.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_controls_e.tex", as(tex) replace
 	
 	
 	***summarise most important control variables - class level
@@ -236,7 +233,7 @@ if `summary'==1{
 	local table prop_sd
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_controls_cc.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_controls_cc.tex", as(tex) replace
 	
 	***summarise school types
 	
@@ -258,23 +255,20 @@ if `summary'==1{
 	local table total_prop
 	include "$HELPER/table_formatting"
 
-	collect export "$TAB/neps_school_types.tex", as(tex) replace
+	collect export "$NEPSTAB/neps_school_types.tex", as(tex) replace
 	
 }
 
 if `ols'==1{
 	
-	***RUN ON BOTH IMPUTED AND NON-IMPUTED DATA!!!! 
-	
-	***SEE SUMMARY STATS TO DECIDE WHICH CONTROLS TO INCLUDE!!!
+	***run on moth imputed and non-imputed data
 	
 	***pooled ols
 	
 	local com reg std_score
 	
-	foreach x of varlist class_size class_size_imp{ //ABSENCES REMOVED AS IT IS ONLY IN TWO WAVES... E_MT AND E_MIGRANT REMOVED BECAUSE OF COLLINEARITY???
+	foreach x of varlist class_size class_size_imp{ 
 		
-		//DROP LESSON MINUTES DUE TO 45 OR OTHER STRUCTURE, NO CLEAR USE OR INTERPRETATION!
 
 		`com' `x', robust //no controls
 		
@@ -314,9 +308,9 @@ if `ols'==1{
 	
 
 	
-	foreach x of varlist class_size class_size_imp{ //ABSENCES REMOVED AS IT IS ONLY IN TWO WAVES... E_MT AND E_MIGRANT REMOVED BECAUSE OF COLLINEARITY???
+	foreach x of varlist class_size class_size_imp{ 
 		
-		//DROP LESSON MINUTES DUE TO 45 OR OTHER STRUCTURE, NO CLEAR USE OR INTERPRETATION!
+		
 
 		`com' `x', robust //no controls
 		
@@ -354,14 +348,14 @@ if `ols'==1{
 		
 	}
 	
-	//SINCE COEFFICIENT ON IMP CLASS NUMBER AND NON-IMP IS BASICALLY THE SAME, PROCEED WITH IMP!!!!
+	
 	
 	***ols by wave
 	
 	local time 1 2
 	
-	foreach x of varlist class_size class_size_imp{ //ABSENCES REMOVED AS IT IS ONLY IN TWO WAVES... E_MT AND E_MIGRANT REMOVED BECAUSE OF COLLINEARITY
-			
+	foreach x of varlist class_size class_size_imp{ 
+		
 		foreach t of local time{
 
 		
@@ -406,8 +400,7 @@ if `ols'==1{
 		}
 	}
 	
-		foreach x of varlist class_size class_size_imp{ //ABSENCES REMOVED AS IT IS ONLY IN TWO WAVES... E_MT AND E_MIGRANT REMOVED BECAUSE OF COLLINEARITY
-
+		foreach x of varlist class_size class_size_imp{ 
 
 		
 			`com' `x' if time_full==3, robust //no controls
@@ -454,53 +447,53 @@ if `ols'==1{
 	etable, estimates(class_size_1 class_size_2 class_size_3 ///
 	class_size_4 class_size_5) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_baseline.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_baseline.tex", replace)
 	
 	etable, estimates(class_size_imp_1 class_size_imp_2 class_size_imp_3 ///
 	class_size_imp_4 class_size_imp_5) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_imp.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_imp.tex", replace)
 	
 	etable, estimates(class_size_1_hw class_size_2_hw class_size_3_hw ///
 	class_size_4_hw class_size_5_hw) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_hw.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_hw.tex", replace)
 	
 	etable, estimates(class_size_imp_1_hw class_size_imp_2_hw class_size_imp_3_hw ///
 	class_size_imp_4_hw class_size_imp_5_hw) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_imp_hw.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_imp_hw.tex", replace)
 	
 	etable, estimates(class_size_1_1 class_size_2_1 class_size_3_1 ///
 	class_size_5_1) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_wave1.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_wave1.tex", replace)
 	
 	etable, estimates(class_size_1_2 class_size_2_2 class_size_3_2 ///
 	class_size_4_2 class_size_5_2) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_wave3.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_wave3.tex", replace)
 	
 	
 	etable, estimates(class_size_imp_1_1 class_size_imp_2_1 ///
 	class_size_imp_3_1 class_size_imp_5_1) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_wave1_imp.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_wave1_imp.tex", replace)
 	
 	etable, estimates(class_size_imp_1_2 class_size_imp_2_2 class_size_imp_3_2 ///
 	class_size_imp_4_2 class_size_imp_5_2) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_wave3_imp.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_wave3_imp.tex", replace)
 	
 	etable, estimates(class_size_1_3 class_size_2_3 class_size_3_3 ///
 	class_size_4_3 class_size_5_3) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_ols_wave5.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_wave5.tex", replace)
 	
 	etable, estimates(class_size_imp_1_3 class_size_imp_2_3 class_size_imp_3_3 ///
 	class_size_imp_4_3 class_size_imp_5_3) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar) ///
-	mstat(r2) mstat(N) export("$TAB/neps_ols_wave5_imp.tex", replace)
+	mstat(r2) mstat(N) export("$NEPSTAB/neps_ols_wave5_imp.tex", replace)
 	
 	drop _est*
 	
@@ -588,36 +581,36 @@ if `panel'==1{
 	etable, estimates(class_size_fe1_1 class_size_fe1_2 class_size_fe1_3 ///
 	class_size_fe1_4 class_size_fe1_5 class_size_fe1_6) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_hdfe1.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_hdfe1.tex", replace)
 	
 	etable, estimates(class_size_imp_fe1_1 class_size_imp_fe1_2 class_size_imp_fe1_3 ///
 	class_size_imp_fe1_4 class_size_imp_fe1_5 class_size_imp_fe1_6) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	mstat(r2) mstat(N) export("$TAB/neps_hdfe1_imp.tex", replace)
+	mstat(r2) mstat(N) export("$NEPSTAB/neps_hdfe1_imp.tex", replace)
 	
 	etable, estimates(class_size_fe2_1 class_size_fe2_2 class_size_fe2_3 ///
 	class_size_fe2_4 class_size_fe2_5 class_size_fe2_6) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	 mstat(r2) mstat(N) export("$TAB/neps_hdfe2.tex", replace)
+	 mstat(r2) mstat(N) export("$NEPSTAB/neps_hdfe2.tex", replace)
 	
 	etable, estimates(class_size_imp_fe2_1 class_size_imp_fe2_2 class_size_imp_fe2_3 ///
 	class_size_imp_fe2_4 class_size_imp_fe2_5 class_size_imp_fe2_6) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	mstat(r2) mstat(N) export("$TAB/neps_hdfe2_imp.tex", replace)
+	mstat(r2) mstat(N) export("$NEPSTAB/neps_hdfe2_imp.tex", replace)
 	
 	etable, estimates(class_size_fe1_1_c class_size_fe1_2_c ///
 	class_size_fe1_3_c class_size_fe1_4_c ///
 	class_size_fe1_5_c class_size_fe1_6_c) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	mstat(r2) mstat(N) export("$TAB/neps_hdfe1_controls.tex", replace)
+	mstat(r2) mstat(N) export("$NEPSTAB/neps_hdfe1_controls.tex", replace)
 	
 	etable, estimates(class_size_imp_fe1_1_c class_size_imp_fe1_2_c ///
 	class_size_imp_fe1_3_c class_size_imp_fe1_4_c ///
 	class_size_imp_fe1_5_c class_size_imp_fe1_6_c) ///
 	stars(0.05 "*" 0.01 "**" 0.001 "***", attach(_r_b)) col(depvar)  ///
-	mstat(r2) mstat(N) export("$TAB/neps_hdfe1_imp_controls.tex", replace)
+	mstat(r2) mstat(N) export("$NEPSTAB/neps_hdfe1_imp_controls.tex", replace)
 	
-	***PROBLEM: GIVEN THE VERY SMALL T, THE LAGGED DV IS EXTREMELY HIGHLY MULTICOLLINEAR WITH INDIVIDUAL FES!!!!
+	
 	
 }	
 	
@@ -625,11 +618,6 @@ if `panel'==1{
 	
 if `qr'==1{
 	
-	***LOOK AT OLS RESULTS AND DECIDE WHAT MAKES SENSE TO RUN!!!!
-	
-	***DO NOT RUN ALL THE DIFFERENT SPECIFICATIONS - DO SOMETHING SIMILAR TO THE PANEL VERSION - DO ONLY ON POOLED SAMPLE!!!!
-	
-	***FUNCTIONAL OPTION ALLOWS FOR TESTING MULTIPLE HYPOTEHSIS I.E. KOLMOGOROV-SMIRNOV!!!
 	
 	local com qrprocess std_score
 	
@@ -648,7 +636,7 @@ if `qr'==1{
 		plotprocess `x' , compare(reg, robust) ///
 		lcolor(blue) pcolor(stblue%50) other(note(Maths lesson number not included))
 			
-		graph export "$FIG/neps_`x'_qr_1.jpg", as(jpg) quality(100) replace
+		graph export "$NEPSFIG/neps_`x'_qr_1.jpg", as(jpg) quality(100) replace
 	
 		
 		`com' `x' ma_lesson_num, `qt'
@@ -658,7 +646,7 @@ if `qr'==1{
 		plotprocess `x' , compare(reg, robust) ///
 		lcolor(blue) pcolor(stblue%50) other(note(Maths lesson number included))
 			
-		graph export "$FIG/neps_`x'_qr_2.jpg", as(jpg) quality(100) replace
+		graph export "$NEPSFIG/neps_`x'_qr_2.jpg", as(jpg) quality(100) replace
 	
 		
 		`com' `x' ma_lesson_num_imp, `qt'
@@ -668,7 +656,7 @@ if `qr'==1{
 		plotprocess `x' , compare(reg, robust) ///
 		lcolor(blue) pcolor(stblue%50) other(note(Maths lesson number imputed included))
 			
-		graph export "$FIG/neps_`x'_qr_3.jpg", as(jpg) quality(100) replace
+		graph export "$NEPSFIG/neps_`x'_qr_3.jpg", as(jpg) quality(100) replace
 		
 		
 	}
@@ -683,7 +671,7 @@ if `qr'==1{
 		plotprocess `x' , compare(reg, robust) ///
 		lcolor(blue) pcolor(stblue%50) other(note("Student and class/school controls included"))
 			
-		graph export "$FIG/neps_`x'_qr_1_c.jpg", as(jpg) quality(100) replace
+		graph export "$NEPSFIG/neps_`x'_qr_1_c.jpg", as(jpg) quality(100) replace
 			
 		`com' `x' ma_lesson_num `controls', `qt' // ERROR HERE!!!
 			
@@ -692,7 +680,7 @@ if `qr'==1{
 		plotprocess `x' , compare(reg, robust) ///
 		lcolor(blue) pcolor(stblue%50) other(note("Student, class/school, and maths lesson number controls included"))
 			
-		graph export "$FIG/neps_`x'_qr_2_c.jpg", as(jpg) quality(100) replace
+		graph export "$NEPSFIG/neps_`x'_qr_2_c.jpg", as(jpg) quality(100) replace
 			
 		`com' `x' ma_lesson_num_imp `controls', `qt'
 			
@@ -701,19 +689,19 @@ if `qr'==1{
 		plotprocess `x' , compare(reg, robust) ///
 		lcolor(blue) pcolor(stblue%50) other(note("Student, class/school, and maths lesson number imputed controls included"))
 			
-		graph export "$FIG/neps_`x'_qr_3_c.jpg", as(jpg) quality(100) replace
+		graph export "$NEPSFIG/neps_`x'_qr_3_c.jpg", as(jpg) quality(100) replace
 
 	}
 	
 
-	***ONCE I HAVE RUN THESE, MAKE SURE TO RE-RUN WHICHEVER SEEMS MOST RELEVANT WITH THE FUNCTIONAL HYPOTEHSIS TESTING!!!
+	
 	
 }
 
 
 if `mdqr'==1{
 	
-	***I HAVE IDENTIFIED THE KEY REGRESSIONS: REG OF SCORE ON CLASS_SIZE, LAG, AND LESSON NUMBER WITH CLASS EFFECTS AND WAVE EFFECTS - NO INDIVIDUAL EFFECTS - MAYBE HERE TRY TO INCLUDE INDIVIDUAL CONTROLS AND SEE WHAT HAPPENS!!!!
+	
 	
 	local com mdqr std_score
 	
@@ -733,8 +721,6 @@ if `mdqr'==1{
 		german_mothertongue ever_tut_math t_migrant_gen t_satisfaction
 	 
 	
-	//careful - MDQR does not work without at least one non-group variable!!! - THIS IS BECAUSE OF THE FIRST-STAGE ESTIMATION PROCEDURE!!!
-	
 	//add in basic student controls: gender, west german, repeated grade, german mt, sen, tutoring math, migrant, school satistfaction
 	
 	foreach x of varlist class_size class_size_imp{
@@ -747,7 +733,7 @@ if `mdqr'==1{
 			plotprocess `x' , compare(reghdfe, absorb(ID_cc time_full) vce(cluster ID_cc)) ///
 			lcolor(blue) pcolor(stblue%50) other(note("No lag included. Student controls included."))
 			
-			graph export "$FIG/neps_`x'_`se'_1.jpg", as(jpg) quality(100) replace
+			graph export "$NEPSFIG/neps_`x'_`se'_1.jpg", as(jpg) quality(100) replace
 			
 			quietly: `com' `x' lag1_score `controls', ``se'' `est' `gp' `qt' `fe'
 			
@@ -756,7 +742,7 @@ if `mdqr'==1{
 			plotprocess `x', compare(reghdfe, absorb(ID_cc time_full) vce(cluster ID_cc)) ///
 			lcolor(blue) pcolor(stblue%50) other(note("Lag and student controls included"))
 			
-			graph export "$FIG/neps_`x'_`se'_2.jpg", as(jpg) quality(100) replace
+			graph export "$NEPSFIG/neps_`x'_`se'_2.jpg", as(jpg) quality(100) replace
 			
 			quietly: `com' `x' ma_lesson_num `controls', ``se'' `est' `gp' `qt' `fe'
 			
@@ -765,7 +751,7 @@ if `mdqr'==1{
 			plotprocess `x', compare(reghdfe, absorb(ID_cc time_full) vce(cluster ID_cc)) ///
 			lcolor(blue) pcolor(stblue%50) other(note("No lag included. Student and class number controls included."))
 			
-			graph export "$FIG/neps_`x'_`se'_3.jpg", as(jpg) quality(100) replace
+			graph export "$NEPSFIG/neps_`x'_`se'_3.jpg", as(jpg) quality(100) replace
 			
 			quietly: `com' `x' lag1_score ma_lesson_num `controls', ``se'' `est' `gp' `qt' `fe'
 			
@@ -774,7 +760,7 @@ if `mdqr'==1{
 			plotprocess `x', compare(reghdfe, absorb(ID_cc time_full) vce(cluster ID_cc)) ///
 			lcolor(blue) pcolor(stblue%50) other(note("Lag, student and class number controls included."))
 			
-			graph export "$FIG/neps_`x'_`se'_4.jpg", as(jpg) quality(100) replace
+			graph export "$NEPSFIG/neps_`x'_`se'_4.jpg", as(jpg) quality(100) replace
 			
 			quietly: `com' `x' ma_lesson_num_imp `controls', ``se'' `est' `gp' `qt' `fe'
 			
@@ -783,7 +769,7 @@ if `mdqr'==1{
 			plotprocess `x' , compare(reghdfe, absorb(ID_cc time_full) vce(cluster ID_cc)) ///
 			lcolor(blue) pcolor(stblue%50) other(note("No lag included. Student and class number imputed controls included."))
 			
-			graph export "$FIG/neps_`x'_`se'_5.jpg", as(jpg) quality(100) replace
+			graph export "$NEPSFIG/neps_`x'_`se'_5.jpg", as(jpg) quality(100) replace
 			
 			quietly: `com' `x' lag1_score ma_lesson_num_imp `controls', ``se'' `est' `gp' `qt' `fe'
 			
@@ -792,9 +778,9 @@ if `mdqr'==1{
 			plotprocess `x' , compare(reghdfe, absorb(ID_cc time_full) vce(cluster ID_cc)) ///
 			lcolor(blue) pcolor(stblue%50) other(note("Lag, student, and class number imputed control included."))
 			
-			graph export "$FIG/neps_`x'_`se'_6.jpg", as(jpg) quality(100) replace
+			graph export "$NEPSFIG/neps_`x'_`se'_6.jpg", as(jpg) quality(100) replace
 			
-		} //first se does not allow for intra-group correlation, the second does??? not clear - second se introduces stochasticity... 
+		} 
 	}
 	
 

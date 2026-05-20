@@ -36,7 +36,7 @@ Stata14\SC3_pEducator_D_13-0-0 Stata14\SC3_pParent_D_13-0-0 Stata14\SC3_pTarget_
 	
 foreach file of local files{
 		
-	use "$DATA/`file'.dta", clear
+	use "$NEPSDATA/`file'.dta", clear
 		
 	label language en
 		
@@ -126,12 +126,11 @@ if `merge_1'==1{
 	
 	sort ID_e wave
 	drop wave
-	duplicates drop ID_e, force //data is time-invariant
+	duplicates drop ID_e, force //data is time-invariant!
 	
 	
 	merge 1:m ID_e using `merge4', nogen 
-	
-	drop if ID_t ==. & wave==. 
+	drop if ID_t ==. & wave==.
 	
 	tempfile merge5
 	save `merge5'
@@ -201,10 +200,11 @@ if `merge_2'==1{
 
 if `clean1'==1{
 	
+	
 	tempfile first_clean
 	save `first_clean'
 	
-	***drop observations missing key variables
+	***drop observations missing key variables - use codebook for guidance
 	
 	drop if !inlist(wave,1,3,5,9) //remove waves w/out maths test
 	
@@ -386,7 +386,7 @@ if `attainment'==1{
 	
 	replace total_g5 = 28
 	replace total_g7 = 24
-	replace total_g9 = 35  //count total number of points available
+	replace total_g9 = 35  //count total number of points available, assume refused/not reached/implausible means wrong
 	
 	
 	foreach grade of local grades{
@@ -579,7 +579,8 @@ if `impute'==1{
 	tempfile clean1
 	save `clean1'
 	
-	//created separate class size with imputed values - test both later on
+	//created separate class size with imputed values - test both later on!
+	
 	
 	preserve
 	
@@ -989,7 +990,7 @@ if `impute'==1{
 	//hh_income, hh_size are missing an enormous number of obs!!
 	
 	
-	save "$DATA/neps_clean.dta", replace
+	save "$NEPSDATA/neps_clean.dta", replace
 	
 }
 
