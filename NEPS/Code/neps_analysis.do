@@ -2,8 +2,11 @@ clear
 clear matrix
 clear mata
 set maxvar 15000
+set scheme s2color
 
 *** set file path globals
+
+global HELPER "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper"
 
 local project "NEPS"
 include "$HELPER/pathnames.do"
@@ -39,7 +42,7 @@ if `summary'==1{
 	table () (result), stat(total time1 time2 time3 sample_size) stat(mean time1 time2 time3 sample_size) nformat(%7.2g)
 	
 	local table sample
-	include "$HELPER/table_formatting"
+	include "$HELPER/table_formatting.do"
 
 	collect export "$NEPSTAB/neps_sample.tex", as(tex) replace
 

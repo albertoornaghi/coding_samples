@@ -1,5 +1,5 @@
 
-global HELPER "$MAIN/Helper"
+
 
 if "`project'"=="RFE"{
 	global RFEMAIN "/Users/albertoornaghi/Documents/GitHub/coding_samples/RFE"
