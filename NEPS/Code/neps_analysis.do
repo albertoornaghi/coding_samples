@@ -5,6 +5,8 @@ set maxvar 15000
 
 *** set file path globals
 
+global HELPER "/Users/albertoornaghi/Documents/GitHub/coding_samples/Helper"
+
 local project "NEPS"
 include "$HELPER/pathnames.do"
 
