@@ -1,5 +1,5 @@
 # coding_samples
-This repository contains samples from code I have written for my undergraduate dissertation and other research projects. The code for the first three projects is written in STATA, and the last in Python. 
+This repository contains samples from code I have written for my undergraduate dissertation, Master thesis, and other research projects. The code for the first three projects is written in STATA, and the last in Python. 
 
 .do files with the prefix RFE pertain to my dissertation on Radical Flank Effects in the UK's environmental movement, for which I have also included the raw and cleaned data I created from the survey experiment used for this study. 
 
